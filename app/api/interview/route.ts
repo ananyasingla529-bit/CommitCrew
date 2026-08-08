@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { kv } from "@vercel/kv";
 import curriculum from "@/public/curriculum.json";
 
 // ═══════════════════════════════════════════════════════════════════
@@ -58,7 +59,13 @@ type Feedback = {
   next: string[];
 };
 
-const sessions = new Map<string, Session>();
+// Sessions now live in Vercel KV (a small persistent key-value store),
+// not in a server-memory Map. This survives server restarts, unlike the
+// old in-memory version — that's the whole point of this change.
+// Each session is stored under the key `interview-session:<sessionId>`.
+function sessionKey(sessionId: string): string {
+  return `interview-session:${sessionId}`;
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // PERSONA PROMPTS (from Person 2, finalized versions)
@@ -174,8 +181,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "sessionId is required" }, { status: 400 });
   }
 
+  const existingSession = await kv.get<Session>(sessionKey(sessionId));
+
   // ── CASE 1: New interview ──
-  if (!sessions.has(sessionId)) {
+  if (!existingSession) {
     if (!candidate) {
       return NextResponse.json(
         { error: "candidate is required for new interview" },
@@ -197,7 +206,8 @@ export async function POST(request: Request) {
       completionReason: "Starting interview. Need at least 8 questions across 4+ days.",
     };
 
-    sessions.set(sessionId, { structure1, structure2, structure3, persona });
+    const newSession: Session = { structure1, structure2, structure3, persona };
+    await kv.set(sessionKey(sessionId), newSession);
 
     return NextResponse.json({
       reply: "Welcome. Let's begin your interview.",
@@ -205,12 +215,12 @@ export async function POST(request: Request) {
     });
   }
 
-  const session = sessions.get(sessionId)!;
+  const session = existingSession;
 
   // ── CASE 2: Interview already complete ──
   if (session.structure3.isComplete) {
     const feedback = await generateFeedback(session.structure2, session.structure1, session.persona);
-    sessions.delete(sessionId);
+    await kv.del(sessionKey(sessionId));
 
     return NextResponse.json({
       reply: "Interview completed.",
@@ -261,6 +271,10 @@ export async function POST(request: Request) {
   // candidate's profile richness and the persona's own stated preference
   const targetQuestions = getTargetQuestionCount(session.structure1, session.persona);
   updateStructure3(session.structure3, dayAsked, targetQuestions);
+
+  // Step 7: save the updated session back to KV — unlike the old in-memory
+  // Map, mutating the object in place does NOT persist anything on its own.
+  await kv.set(sessionKey(sessionId), session);
 
   return NextResponse.json({
     reply: aiReply,
