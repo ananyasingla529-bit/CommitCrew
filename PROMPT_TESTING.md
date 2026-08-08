@@ -1316,4 +1316,253 @@ No Persona C v3 change is required.
 
 All three personas have now completed individual validation.
 
+# Head-to-Head Persona Comparison — A vs B vs C
+
+## Finalized Versions Tested
+
+- Persona A — v4 FINAL
+- Persona B — v3 FINAL
+- Persona C — v2 FINAL
+
+Persona C transcripts reuse the validated Emily Chen and Gerald Combs runs already documented above. No prompt modifications were made between those validation runs and this comparison.
+
+---
+
+## Executive Summary
+
+All three personas met the mandatory interview requirements on both candidates with zero guardrail violations.
+
+The comparison confirmed that the personas are intentionally different rather than competing to behave identically:
+
+- **Persona A:** strongest pure technical and architectural signal
+- **Persona B:** strongest hiring-decision-ready feedback
+- **Persona C:** strongest candidate experience, adaptability, and natural conversation
+
+No persona showed a concrete defect requiring another prompt revision.
+
+The results support keeping all three personas rather than converging them into a single interviewing style.
+
+---
+
+## Persona A — Final Assessment
+
+**Version:** v4 FINAL
+
+### Strengths
+
+- Deepest dependency and architectural reasoning
+- Strongest systems-level signal
+- Consistently traces how components depend on and feed into each other
+- Strong breadth on rich candidate profiles
+- Strong typed follow-ups across the interview
+- Effective at exposing failure propagation and architectural trade-offs
+
+### Weaknesses
+
+- More audit-like than conversational
+- Less warm and natural than Persona C
+- Can feel more structured and directed
+- Dependency probing must remain restricted to the candidate's eligible curriculum pool
+
+### Best Use
+
+Architecture-heavy or systems-focused evaluations where maximum technical depth is the priority.
+
+### Verdict
+
+**FINAL — No changes recommended.**
+
+---
+
+## Persona B — Final Assessment
+
+**Version:** v3 FINAL
+
+### Strengths
+
+- Most directly useful for hiring decisions
+- Strong production and job-readiness framing
+- Good balance between technical reasoning and practical applicability
+- Strong attempts-based calibration
+- Strong failed/skipped-day protection
+- Feedback is immediately understandable to a hiring manager
+
+### Weaknesses
+
+- Question framing can become somewhat formulaic
+- Less deep dependency tracing than Persona A
+- More structured than Persona C
+
+### Best Use
+
+Standard hiring-decision interviews where the primary question is whether the candidate can apply their knowledge effectively in a real role.
+
+### Verdict
+
+**FINAL — No changes recommended.**
+
+---
+
+## Persona C — Final Assessment
+
+**Version:** v2 FINAL
+
+### Strengths
+
+- Most natural and conversational
+- Strongest candidate experience
+- Highly adaptable to candidate answers
+- Candidate-led tangents and thread chaining work well
+- Strong follow-up diagnostics without becoming checklist-driven
+- Rich-profile breadth improved without mechanical question padding
+- Strong attempts-based calibration
+- Strong thin-profile and failed/skipped-day handling
+
+### Weaknesses
+
+- Maximum technical depth is slightly below Persona A
+- Feedback is less explicitly formatted around hiring decisions than Persona B
+- Closing synthesis can be less explicit
+
+### Best Use
+
+Candidates who benefit from a lower-pressure, conversational interview style, particularly junior, non-traditional, or candidates with backgrounds outside AI.
+
+### Verdict
+
+**FINAL — No changes recommended.**
+
+---
+
+## Head-to-Head Results
+
+| Criterion | Persona A | Persona B | Persona C | Winner |
+|---|---:|---:|---:|---|
+| Technical signal | 9 | 8 | 7.5 | A |
+| Depth | 9.5 | 8 | 7.5 | A |
+| Adaptability | 7.5 | 8 | 9.5 | C |
+| Curriculum coverage | 9 | 7.5 | 8.5 | A |
+| Follow-up quality | 9 | 8.5 | 8 | A |
+| Naturalness | 6.5 | 7.5 | 9.5 | C |
+| Candidate experience | 7 | 8 | 9.5 | C |
+| Feedback quality | 8.5 | 9 | 8 | B |
+| Cross-profile consistency | 9 | 9 | 9 | Tie |
+| Overall hiring usefulness | 8.5 | 9 | 7.5 | B |
+
+---
+
+## Candidate Comparison
+
+### Emily Chen — Rich, AI-Native Profile
+
+**Persona A**
+- 10 primary questions
+- 9 distinct curriculum days
+- 5 modules
+- 10/10 grounded typed follow-ups
+- Strongest dependency tracing
+- Deepest architectural signal
+
+**Persona B**
+- 8 primary questions
+- 6 distinct curriculum days
+- 4 modules
+- 8/8 grounded follow-ups
+- Strongest hiring-manager-oriented feedback
+
+**Persona C**
+- 10 primary questions
+- 10 distinct curriculum days
+- 4 modules
+- 9 follow-ups
+- Strongest natural candidate-led exploration
+- Preserved conversational identity while increasing breadth
+
+### Gerald Combs — Thin, High-Attempt Profile
+
+All three personas:
+
+- Used only eligible passed days
+- Avoided all failed/skipped days
+- Reached 8 questions without inventing curriculum content
+- Adapted difficulty to higher attempt counts
+- Produced concrete feedback
+- Maintained cross-profile consistency
+
+**Persona A**
+- Strongest dependency reasoning
+- Revisited Day 16 for additional signal
+
+**Persona B**
+- Strongest direct hiring-readiness signal
+- Extracted useful production/reliability information without needing additional curriculum breadth
+
+**Persona C**
+- Strongest low-pressure candidate experience
+- Naturally encouraged honest admissions about what was and wasn't implemented
+- Preserved peer-conversation style under a thin profile
+
+---
+
+## Final Behavioral Distinction
+
+The three personas should remain intentionally different:
+
+- **A = Audit-style:** "How does the system connect?"
+- **B = Decision-style:** "Can this person actually do the job?"
+- **C = Conversation-style:** "How does this candidate think when we follow their story?"
+
+Trying to make all three behave the same would remove the reason for having three personas.
+
+---
+
+## Final Recommendation
+
+Do **not** merge the personas or make additional prompt changes at this stage.
+
+Use a routing layer to select the persona based on the interview context:
+
+- **Persona B** → default hiring-decision interviews
+- **Persona A** → architecture/systems-heavy roles where technical depth is the priority
+- **Persona C** → candidates who benefit from a more conversational and lower-pressure experience
+
+The evidence does not justify a more complex routing system yet. Job role/type and candidate profile are sufficient signals for an initial routing strategy.
+
+---
+
+## Phase 1 Status
+
+**Phase 1 — COMPLETE**
+
+### Final Versions
+
+- Persona A → **v4 FINAL**
+- Persona B → **v3 FINAL**
+- Persona C → **v2 FINAL**
+
+### Validation Completed
+
+- Persona-specific iteration testing
+- Emily Chen validation
+- Gerald Combs validation
+- Attempts-based calibration
+- Failed/skipped-day protection
+- Thin-profile handling
+- Rich-profile breadth
+- Follow-up quality
+- Curriculum coverage
+- Candidate experience
+- Structured feedback
+- Cross-persona comparison
+
+### Regressions
+
+**None identified.**
+
+### Prompt Changes Required
+
+**None.**
+
+The three personas are considered finalized and ready for implementation/integration.
+
 
