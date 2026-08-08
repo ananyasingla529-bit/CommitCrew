@@ -1742,4 +1742,54 @@ The evidence does not justify a more complex routing system yet. Job role/type a
 
 The three personas are considered finalized and ready for implementation/integration.
 
+## Phase 2 — Persona B Baseline Test
+
+### Test Candidate
+David Miller — Business Analyst
+
+### Test Configuration
+- Persona: B — The Practical Recruiter
+- Primary questions: 8
+- Distinct curriculum days: 8
+- Modules covered: 4
+- Candidate profile: Same David Miller profile used for persona comparison
+
+### Results
+
+| Criterion | Result |
+|---|---|
+| Business/job-role framing | ✅ Strong |
+| Attempts-based calibration | ✅ Worked |
+| Follow-ups grounded in candidate answers | ✅ Strong |
+| Generic verification avoided | ✅ |
+| Skipped/failed days avoided | ✅ |
+| 8+ primary questions | ✅ |
+| 4+ modules | ✅ |
+| Conversational recruiter style | ✅ Strong |
+| Feedback format | ✅ Correct |
+
+### Strengths Observed
+
+- Questions consistently connected AI concepts to business/stakeholder concerns.
+- Attempts were used appropriately to adjust question difficulty and framing.
+- Follow-ups referenced specific parts of David's answers rather than using generic prompts.
+- Persona B maintained a natural hiring-manager tone.
+- The interviewer correctly avoided skipped/failed curriculum days.
+- Feedback accurately identified David's strongest and weakest areas.
+
+### Observation
+
+Persona B detected when David's answers were too abstract and asked for
+concrete examples. However, when the second answer remained somewhat
+abstract, the interviewer moved on after one additional push.
+
+This is an observation rather than a confirmed defect. Further persona
+comparison is needed before changing the prompt.
+
+### Verdict
+
+Persona B baseline test: **PASS**
+
+No prompt changes made yet.
+
 
