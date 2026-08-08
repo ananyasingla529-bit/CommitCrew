@@ -80,3 +80,43 @@ Next change for Version 3:
 - Strengthen follow-up instructions so questions explore dependencies,
   consequences, trade-offs, failure modes, and system-level reasoning
   instead of merely asking for elaboration or verification.
+
+## Persona A — Version 3
+
+Test candidate: Emily Chen (CAND-003)
+
+Result:
+- 8 primary questions
+- 7 distinct curriculum days
+- 8 grounded follow-ups
+- Every follow-up had a purposeful angle
+- Context maintained
+- Structured feedback generated
+- All mandatory requirements satisfied
+
+Improvement from v2:
+- Generic follow-ups were eliminated.
+- Follow-ups now explore dependencies, consequences, trade-offs, or
+  failure/scaling scenarios.
+- Questions referenced specific details from the candidate's answers.
+- The interview remained conversational and did not become unnecessarily
+  difficult.
+
+Remaining issue:
+- The interview returned to the minimum of 8 questions instead of the
+  10-question target used for rich candidate profiles in v2.
+- However, 8 strong primary questions plus 8 grounded follow-ups already
+  produced a substantial interview.
+- Forcing additional questions could make the interview unnecessarily long.
+
+Decision:
+- Do not require 10-12 questions for rich candidates.
+- Prioritize interview quality over question quantity.
+- Use 8-10 primary questions normally.
+- Use up to 10 only when additional curriculum areas provide meaningful
+  new signal.
+- Never add questions solely to increase the question count.
+
+Next refinement:
+- Replace the 10-12 question target with an 8-10 question target while
+  keeping the improved follow-up rules from Version 3.
