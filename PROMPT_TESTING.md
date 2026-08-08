@@ -120,3 +120,174 @@ Decision:
 Next refinement:
 - Replace the 10-12 question target with an 8-10 question target while
   keeping the improved follow-up rules from Version 3.
+
+# Prompt Testing
+
+## Persona B — Baseline Testing
+
+### Test Information
+
+* **Persona:** Persona B — The Practical Recruiter
+* **Candidate:** Emily Chen (CAND-003)
+* **Version:** Original / Unmodified
+* **Primary Questions:** 8
+* **Distinct Curriculum Days:** 7
+* **Modules Covered:** 4
+* **Follow-ups:** 6/8
+* **Structured Feedback:** ✅
+* **Mandatory Requirements:** ✅ Met
+
+---
+
+## Baseline Results
+
+### Strengths
+
+1. **Strong practical framing**
+
+   * Questions consistently focused on real-world and production applications.
+   * The interviewer frequently asked how technical decisions would matter in an actual product or workplace.
+
+2. **Conversational authenticity**
+
+   * The interviewer reacted naturally to Emily's answers.
+   * Comments such as acknowledging honesty and practical judgment made the interaction feel more like a real recruiter conversation than a scripted technical quiz.
+
+3. **Rewards honesty**
+
+   * The interview created opportunities for Emily to admit when something was theoretical or unverified.
+   * This worked especially well with the MCP and multi-agent questions.
+
+4. **Clear business communication**
+
+   * The capstone question successfully tested whether Emily could explain a technical system to a non-technical PM without unnecessary jargon.
+
+---
+
+## Weaknesses Identified
+
+### 1. Job-role prioritization was not meaningfully exercised
+
+Emily is an AI Engineer, so almost the entire curriculum is relevant to her role. As a result, the job-role prioritization rule did not have to make meaningful choices.
+
+**Impact:** The test does not prove that Persona B will correctly prioritize curriculum days for candidates with more specialized roles.
+
+---
+
+### 2. Attempt-based difficulty calibration was not meaningfully exercised
+
+Emily passed all tested days on her first attempt. Therefore, the interview mainly used the highest-difficulty branch of the persona's calibration logic.
+
+The lower-attempt-performance branches were not tested.
+
+**Impact:** We still need to verify that Persona B appropriately simplifies questions for candidates who struggled with a topic.
+
+---
+
+### 3. Generic verification follow-up appeared
+
+The question:
+
+> "Did you actually measure that improvement, or was it more of a gut sense?"
+
+is reasonable, but it is a generic verification question.
+
+It does not specifically investigate a dependency, consequence, trade-off, or failure/scaling scenario.
+
+**Impact:** Persona B can fall back to generic "did you test/measure that?" questions instead of producing more diagnostic follow-ups.
+
+---
+
+### 4. Two questions lacked explicit follow-ups
+
+Two questions did not receive a distinct follow-up, and the interviewer did not explicitly explain why it was moving on.
+
+**Impact:** This creates inconsistent interview depth and leaves a potential gap in context-driven questioning.
+
+---
+
+## Mandatory Requirements
+
+* ✅ Conducted a conversational technical interview
+* ✅ Asked 8 primary questions
+* ✅ Covered 4+ curriculum modules
+* ✅ Maintained conversation context
+* ✅ Generated follow-up questions
+* ✅ Produced structured feedback
+* ⚠️ Follow-ups were not present for every question
+* ✅ Did not directly ask about skipped/failed days
+
+---
+
+## Planned Persona B v2 Improvements
+
+The baseline prompt should remain unchanged. The following changes will be applied only in v2.
+
+### Fix 1 — Improve job-role prioritization
+
+Add a fallback rule for candidates whose job role is broadly relevant to most of the curriculum.
+
+When job-role relevance does not clearly distinguish between days, prioritize:
+
+* Days with stronger integration or practical relevance
+* Higher-difficulty days
+* Skills transferable to adjacent engineering roles
+
+This ensures the job-role strategy still makes a meaningful selection.
+
+---
+
+### Fix 2 — Make follow-ups purposeful
+
+Require follow-ups to primarily use one of these approaches:
+
+1. **Trace a dependency** — ask what earlier component or decision the answer relied on.
+2. **Explore a consequence** — ask what would happen downstream if the approach failed or changed.
+3. **Examine a trade-off** — ask why the candidate chose this approach over a plausible alternative.
+4. **Probe a failure/scaling scenario** — ask what would break under stress, unusual inputs, or increased scale.
+
+Avoid generic questions such as:
+
+> "Did you test that?"
+
+or
+
+> "Did you measure that?"
+
+unless testing or measurement itself is directly relevant to the candidate's answer.
+
+---
+
+### Fix 3 — Require explicit follow-up decisions
+
+Every primary question should receive one grounded follow-up by default.
+
+If the candidate's answer is already exhaustive and another question would be redundant, the interviewer may move on, but should briefly explain why.
+
+Example:
+
+> "That's a complete answer, so I don't think we need to dig further there."
+
+This prevents silent follow-up omissions.
+
+---
+
+## Expected Outcome for Persona B v2
+
+The goal is to preserve Persona B's strongest qualities:
+
+* Practical, production-focused questioning
+* Natural recruiter-style conversation
+* Honest evaluation of candidate claims
+* Business-oriented communication
+
+while improving:
+
+* Follow-up quality
+* Interview consistency
+* Job-role prioritization
+* Difficulty calibration
+* Context-driven questioning
+
+**Baseline Decision:** Keep Persona B v1 unchanged as the control version and test the above changes in Persona B v2.
+
