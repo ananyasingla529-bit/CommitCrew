@@ -933,6 +933,79 @@ The Persona B iteration cycle is complete:
 
 No further Persona B prompt changes are required.
 
+## Persona B Retest — Vague Answer Escalation
+
+### Test Candidate
+
+David Miller — Business Analyst
+
+### Test Configuration
+
+* Persona: B — The Practical Recruiter
+* Prompt: Unmodified Persona B baseline
+* Same candidate used for baseline comparison
+* 8 primary questions
+* 4 modules
+* Deliberately vague answers introduced on Day 12 and Day 10
+
+### Results
+
+| Criterion                                             | Result |
+| ----------------------------------------------------- | ------ |
+| Detects vague/non-concrete answers                    | ✅      |
+| Explicitly identifies lack of evidence                | ✅      |
+| Records vague answers as feedback gaps                | ✅      |
+| Pushes beyond the initial vague answer                | ✅      |
+| Consistent escalation threshold                       | ❌      |
+| Uses an alternative probing strategy before giving up | ❌      |
+| Maintains conversational recruiter style              | ✅      |
+| Overall interview flow                                | ✅      |
+
+### Confirmed Defect
+
+Persona B recognizes vague answers and explicitly states that the candidate has not provided enough concrete evidence. However, its escalation behavior is inconsistent.
+
+On Day 12, the interviewer continued probing after multiple vague responses before eventually stopping.
+
+On Day 10, the interviewer stopped after a shorter escalation.
+
+In neither case did the interviewer consistently apply a defined escalation strategy such as:
+
+1. requesting a concrete example,
+2. if still vague, reframing the question or providing a smaller concrete anchor,
+3. then recording the gap and moving on.
+
+### What Is Working
+
+The transparency behavior should be preserved.
+
+The interviewer correctly:
+
+* identified that the answers remained vague,
+* did not pretend the answers were sufficient,
+* explicitly communicated the evidence gap,
+* recorded the issue in the final feedback.
+
+### Verdict
+
+**CONFIRMED DEFECT — Persona B escalation behavior**
+
+The defect is limited to the lack of a consistent escalation rule for repeatedly vague answers.
+
+### Recommended Fix
+
+Make the escalation behavior explicit and bounded.
+
+The interviewer should use a consistent progression when an answer remains vague:
+
+1. Ask for a concrete example or specific evidence.
+2. If the response remains vague, try one different, simpler or more specific angle to help the candidate provide evidence.
+3. If the answer is still non-concrete, explicitly identify the evidence gap, record it as a gap, and move on.
+
+Do not require unlimited probing or repeatedly ask the same question.
+
+**No prompt modification has been made yet.**
+
 ## Persona C — Baseline Testing
 
 ### Test Information
