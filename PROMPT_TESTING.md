@@ -31,3 +31,25 @@ Test each persona using:
 - Strong candidate
 - Average/mixed candidate
 - Limited/thin candidate
+
+## Persona A — Version 1
+
+Test candidate: Emily Chen (CAND-003)
+
+Result:
+- 8 primary questions
+- 6 curriculum days
+- 6 grounded follow-ups
+- Context maintained
+- Structured feedback generated
+- Mostly conversational
+
+Issues identified:
+1. Stopped at the minimum 8 questions despite a rich candidate profile.
+2. Follow-ups were skipped on two questions.
+3. Transitions between unrelated curriculum days felt abrupt.
+
+Planned changes for Version 2:
+1. Target 10-12 questions for rich candidates.
+2. Make grounded follow-ups the default.
+3. Add natural transition guidance.
