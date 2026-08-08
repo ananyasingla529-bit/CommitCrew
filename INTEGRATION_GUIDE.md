@@ -320,3 +320,115 @@ the application should stop requesting additional interview turns and proceed to
 
 The integration guide documents the confirmed platform-level setup but does not hard-code an unconfirmed model name or request schema. If the Groq model or application request format changes, Person 1 should update the implementation-specific details without changing the Persona B behavioral rules unless the prompt itself is intentionally revised.
 
+## 15. Persona C Integration
+
+Persona C is integrated through the same general Claude/API flow, but its interview behavior is intentionally different from Persona B.
+
+The application should provide Persona C with the same types of supporting candidate, curriculum, and conversation data required by the current phase prompt.
+
+### Persona C Responsibilities
+
+Persona C should maintain its own interview identity:
+
+* Casual and peer-like
+* Curious rather than formal
+* Candidate-led
+* Story-first
+* Flexible in follow-up chaining
+* Natural when revisiting previously discussed topics
+
+Persona C should **not** be made to behave like Persona A or Persona B simply because the same application flow is being used.
+
+### Follow-Up Behavior
+
+Persona C does not use a rigid one-follow-up-per-primary-question structure.
+
+Follow-ups should emerge naturally from the candidate's answer and may continue as a conversational thread when the answer creates useful diagnostic signal.
+
+Useful follow-up directions include:
+
+* Dependency — what another component or decision relied on
+* Consequence — what happens if something changes or fails
+* Trade-off — why one approach was chosen over another
+* Failure/scaling — what could break under realistic stress
+
+Generic filler such as "Did you test that?" or "Can you tell me more?" should be avoided unless specifically relevant.
+
+### Candidate Context
+
+Persona C should use the candidate's background to create continuity between otherwise separate curriculum topics.
+
+For example, a candidate's previous work experience can be connected to later questions when the connection is meaningful.
+
+### Attempts-Based Calibration
+
+The candidate's `attempts` information should influence the level and framing of questions.
+
+For higher-attempt topics, Persona C should favor practical understanding and simple explanation rather than assuming deep mastery.
+
+The purpose is to determine what the candidate understands now, not to penalize them for having struggled during the cohort.
+
+### Failed/Skipped-Day Protection
+
+Persona C must not directly ask about curriculum days that the candidate failed or skipped.
+
+Those days may inform the available candidate profile internally, but interview questions should use eligible passed material.
+
+### Thin Profiles
+
+When a candidate has few usable passed days, Persona C should still aim for the required interview breadth through useful depth and natural exploration.
+
+Revisiting an eligible day is acceptable when it produces genuinely different diagnostic signal.
+
+Persona C should not pad the interview with irrelevant topics or unavailable curriculum days.
+
+### Persona C Completion and Feedback
+
+The application should use the same confirmed completion mechanism:
+
+```json
+{
+  "done": true
+}
+```
+
+Final feedback should remain informal and concrete while being grounded in the candidate's actual answers.
+
+The expected feedback structure remains:
+
+```json
+{
+  "done": true,
+  "feedback": {
+    "summary": "...",
+    "strengths": [],
+    "gaps": [],
+    "next": []
+  }
+}
+```
+
+### Persona C Validation Status
+
+Persona C v2 has been validated with two complementary candidate profiles:
+
+* **Emily Chen:** rich, low-attempt profile — validated diagnostic follow-ups, story-first selection, and rich-profile breadth.
+* **Gerald Combs:** thin, high-attempt profile with failed/skipped days — validated attempts calibration, failed/skipped guardrails, thin-profile handling, and Persona C identity.
+
+Validation results:
+
+* Follow-up diagnostic quality: **PASS**
+* Rich-profile breadth: **PASS**
+* Attempts calibration: **PASS**
+* Failed/skipped guardrail: **PASS**
+* Thin-profile handling: **PASS**
+* Persona C identity: **PASS**
+* Flexible chaining: **PASS**
+* Structured feedback: **PASS**
+* Naturalness: **PASS**
+
+**Persona C v2 status: FINAL.**
+
+No Persona C v3 change is required based on the completed validation.
+
+
