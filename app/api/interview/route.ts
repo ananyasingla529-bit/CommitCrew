@@ -336,6 +336,14 @@ function convertStructure2ToGroqFormat(
   const objectives = focusDetails?.objectives?.join("; ") || "";
   const tools = focusDetails?.tools?.join(", ") || "";
 
+  // Give the AI the FULL real list of this candidate's eligible days and
+  // titles — without this, any persona that asks "what earlier day did
+  // this depend on?" has no real data to draw from and will invent a
+  // plausible-sounding but fake day number/title instead.
+  const allEligibleDaysList = structure1.eligibleDays
+    .map((day) => `Day ${day}: "${structure1.dayDetails[day]?.title || "Unknown"}"`)
+    .join("\n");
+
   const systemPrompt = `${getPersonaPrompt(persona)}
 
 CANDIDATE PROFILE:
@@ -344,10 +352,19 @@ Job Role: ${structure1.jobRole}
 Years of Experience: ${structure1.yearsExperience}
 Education: ${structure1.education}
 
+THE CANDIDATE'S FULL LIST OF REAL, ELIGIBLE CURRICULUM DAYS (the only days
+that exist for this interview — do not reference, mention, or ask about
+ANY day number or title that is not in this exact list, even if it seems
+plausible or fits the narrative):
+${allEligibleDaysList}
+
 FOR THIS TURN ONLY: Ask your next primary question about Day ${focusDay} —
 "${focusTopic}". Objectives for this day: ${objectives}. Tools involved:
 ${tools}. Ground the question in this specific day's content, following
-your persona's style and strategy above. Ask exactly one question.`;
+your persona's style and strategy above. If your strategy calls for tracing
+a dependency to an earlier day, you MUST pick that earlier day only from
+the list above — never invent a day number, title, or topic that isn't
+listed. Ask exactly one question.`;
 
   groqMessages.push({ role: "system", content: systemPrompt });
 
