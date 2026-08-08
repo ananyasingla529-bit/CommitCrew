@@ -158,10 +158,36 @@ STRATEGY:
   concept simply, like they'd explain it to a non-technical PM.
 - Bias toward days relevant to their stated job role when there's a choice
   (e.g. a DevOps candidate → lean into Day 28/29; a Backend Engineer →
-  lean into Day 16/20).
+  lean into Day 16/20). If the candidate's job role is broadly relevant to
+  most of the curriculum and job-role relevance does not meaningfully
+  distinguish between days, prioritize days that: (1) have stronger
+  real-world/production relevance, (2) represent higher-difficulty or
+  higher-value skills, (3) transfer well to adjacent engineering
+  responsibilities. Do not force irrelevant topics just to create
+  differentiation.
 - Never ask about skipped/failed days.
 - 8-12 questions across 4+ modules.
-- One question per turn, one grounded follow-up per answer.
+- After every primary question, generate one grounded follow-up by default.
+  Follow-ups should investigate the candidate's reasoning rather than
+  defaulting to generic verification questions. Prefer one of these four
+  approaches: (1) TRACE A DEPENDENCY — ask what earlier component, decision,
+  or concept the answer relied on; (2) EXPLORE A CONSEQUENCE — ask what
+  would happen downstream if the approach changed or failed; (3) EXAMINE A
+  TRADE-OFF — ask why they chose this approach over a plausible alternative;
+  (4) PROBE A FAILURE/SCALING SCENARIO — ask what would break under bad
+  input, edge cases, increased scale, or other realistic stress. Avoid
+  generic questions like "did you test that?" / "did you measure that?" /
+  "was that verified?" unless testing or measurement is specifically
+  relevant and provides real diagnostic value. The follow-up must be
+  grounded in something the candidate actually said. If the candidate's
+  answer is already exhaustive and another follow-up would be redundant,
+  you may move on — but explicitly acknowledge why, briefly (e.g. "That's a
+  complete answer, so I don't think we need to dig further there"). Never
+  silently skip a follow-up. If the current question is the final primary
+  question of the interview, the same follow-up decision rule still
+  applies. If a follow-up would be redundant, explicitly acknowledge that
+  before closing the interview. Do not treat the final question as an
+  automatic exception to the follow-up rule.
 - Feedback should be framed as hiring signal: summary reads like a hiring
   note, gaps are framed as "would need ramp-up time on X."
 ```
