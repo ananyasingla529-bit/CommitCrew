@@ -121,6 +121,122 @@ Next refinement:
 - Replace the 10-12 question target with an 8-10 question target while
   keeping the improved follow-up rules from Version 3.
 
+## Persona A v4 — Final Testing
+
+### Change Applied
+
+Persona A v4 introduced **one targeted change** to Persona A v3:
+
+- Added a breadth-over-depth tie-breaker for rich candidate profiles.
+- When a candidate has many passed days and mostly low attempt counts, the interviewer should prioritize reaching **10–12 primary questions**.
+- If a covered day's follow-up has already produced sufficient signal, the interviewer should move to another relevant passed day instead of continuing to dig deeper.
+- The change does not alter SHIP_IT prioritization, dependency tracing, follow-up types, difficulty calibration, transitions, or feedback structure.
+
+### Test Candidate
+
+**Emily Chen (CAND-003)**
+
+Emily was deliberately reused from the Persona A v3 test because she has a rich profile:
+
+- 10 passed days
+- All passed days completed on attempt 1
+- Multiple SHIP_IT days
+- Large enough passed-day pool to test breadth
+
+Using the same candidate isolates the effect of the v4 prompt change.
+
+### Test Results
+
+| Metric | Persona A v3 | Persona A v4 |
+|---|---:|---:|
+| Primary questions | 8 | **10** |
+| Distinct curriculum days | 7 | **9** |
+| Modules covered | 5 | **5** |
+| Follow-ups | 8/8 | **10/10** |
+| Generic verification questions | 0 | **0** |
+
+### Follow-Up Quality
+
+- **10/10** primary questions received grounded follow-ups.
+- Follow-ups continued to use the required four types:
+  - Trace a dependency
+  - Explore a consequence
+  - Examine a trade-off
+  - Probe a failure/scaling scenario
+- No generic "did you test/measure that?" questions appeared.
+- No silent follow-up skips occurred.
+
+### Rich-Profile Calibration
+
+**PASS**
+
+The v4 change successfully resolved the v3 question-count regression.
+
+The interview reached **10 primary questions**, within the intended 10–12 range for a rich profile.
+
+The interviewer also explicitly favored breadth over additional depth, using transitions such as:
+
+> "Let's cover new ground now rather than dig deeper here."
+
+and
+
+> "Let's bring in a new day rather than extend this one further."
+
+This demonstrates that the new tie-breaker was actively influencing interview behavior.
+
+### Breadth
+
+**PASS**
+
+The interviewer covered **9 distinct curriculum days** instead of stopping at 7 as in v3.
+
+No individual day received unnecessary additional depth after its follow-up had already produced sufficient signal.
+
+### Other Requirements
+
+- **SHIP_IT prioritization:** Maintained.
+- **Dependency tracing:** Maintained.
+- **Follow-up grounding:** Maintained.
+- **Follow-up types:** Maintained.
+- **Topic transitions:** Natural and contextual.
+- **Context maintenance:** Maintained across the interview.
+- **Conversational tone:** Maintained.
+- **Skipped/failed-day protection:** Maintained.
+- **Structured feedback:** Maintained.
+
+### Regressions
+
+**None identified.**
+
+The targeted change improved question-count calibration without weakening the follow-up quality or systems-thinking behavior established in Persona A v3.
+
+### v3 → v4 Conclusion
+
+Persona A v4 successfully fixes the main issue identified in v3:
+
+> Rich profiles no longer stop at the 8-question floor when additional relevant days are available.
+
+The result was:
+
+**8 questions / 7 days → 10 questions / 9 days**
+
+while maintaining:
+
+**8/8 → 10/10 grounded typed follow-ups**
+
+with **zero generic verification questions**.
+
+### Recommendation
+
+**Persona A v4 is ready to finalize.**
+
+The Persona A iteration cycle is complete:
+
+- **v1 → v2:** improved question-count floor, follow-up handling, and transitions
+- **v2 → v3:** replaced generic verification with typed follow-ups
+- **v3 → v4:** fixed the rich-profile breadth-over-depth regression
+
+No further Persona A prompt changes are required.
 # Prompt Testing
 
 ## Persona B — Baseline Testing
@@ -407,5 +523,7 @@ After v3, test Persona B against a candidate whose profile can exercise the curr
 * A candidate with several higher-attempt curriculum days.
 
 This will validate job-role prioritization and attempts-based difficulty calibration before Persona B is finalized.
+
+
 
 
