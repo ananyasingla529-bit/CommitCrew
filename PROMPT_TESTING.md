@@ -524,6 +524,239 @@ After v3, test Persona B against a candidate whose profile can exercise the curr
 
 This will validate job-role prioritization and attempts-based difficulty calibration before Persona B is finalized.
 
+## Persona B — Version 3 Testing
+
+### Test Information
+
+* **Persona:** Persona B — The Practical Recruiter
+* **Candidate:** Gerald Combs (CAND-010)
+* **Version:** v3
+* **Primary Questions:** 8
+* **Distinct Curriculum Days:** 5
+* **Modules Covered:** 4
+* **Follow-ups:** 8/8
+* **Structured Feedback:** ✅
+* **Mandatory Requirements:** ✅ Met
+
+### Why Gerald Was Selected
+
+Gerald was selected specifically because his profile exercises the two Persona B rules that could not be meaningfully validated using Emily Chen:
+
+* **Job role:** IT Support Specialist — not directly AI-engineering-focused, forcing the interviewer to make a meaningful job-role prioritization decision.
+* **Attempts:** His passed days are mostly at attempts 3–5, allowing the simpler-explanation calibration branch to be exercised.
+* He also has failed days (8, 10, 22) and skipped days (27, 28), providing a meaningful test of the rule that skipped/failed days must never be surfaced.
+
+Eligible passed days for questioning:
+
+* Day 1 — 2 attempts
+* Day 7 — 5 attempts
+* Day 12 — 5 attempts
+* Day 16 — 4 attempts
+* Day 31 — 3 attempts
+
+---
+
+## v3 Change
+
+Persona B v3 introduced **one targeted change** from v2:
+
+> If the current question is the final primary question, apply the same follow-up decision rule as every other question. If a follow-up would be redundant, explicitly acknowledge that before closing the interview.
+
+No other Persona B behavior was intentionally changed.
+
+---
+
+## v3 Results
+
+### Interview Structure
+
+* **8 primary questions**
+* **5 distinct curriculum days**
+* **4 distinct curriculum modules**
+* **8/8 grounded follow-ups**
+* **Structured feedback generated**
+* **Context maintained throughout**
+
+The candidate had only five eligible passed days, so the interviewer appropriately revisited available material rather than violating the guardrail against asking about failed or skipped days.
+
+---
+
+## Follow-Up Quality
+
+**PASS**
+
+All 8 primary questions received a grounded follow-up or explicit follow-up decision.
+
+Follow-ups were based on the candidate's actual response or profile context and used purposeful approaches such as:
+
+* **Trade-off**
+* **Consequence**
+* **Dependency**
+* **Failure/scenario reasoning**
+
+No generic verification questions such as "Did you test that?" or "Did you measure that?" appeared.
+
+### Final-Question Rule
+
+**PASS**
+
+The final Day 31 question received an explicit follow-up decision before the interview closed.
+
+The interviewer acknowledged that the candidate's answer was complete and explained why no additional probing was necessary before ending the interview.
+
+This directly resolves the issue identified in Persona B v2.
+
+---
+
+## Job-Role Prioritization
+
+**PASS**
+
+The candidate's IT Support Specialist background meaningfully influenced the interview.
+
+Examples included:
+
+* Connecting virtual-environment isolation to the candidate's existing server/system experience.
+* Framing the Day 16 API question around how someone with an IT support background would diagnose a failing or hanging endpoint.
+* Asking the candidate to explain the capstone using an analogy appropriate for an IT support team.
+
+This is the first Persona B test where job-role prioritization was meaningfully exercised rather than being effectively irrelevant because the candidate was already an AI Engineer.
+
+---
+
+## Attempts-Based Difficulty Calibration
+
+**PASS**
+
+The candidate's higher attempt counts correctly triggered the simpler explanation branch.
+
+Examples included questions such as:
+
+* Asking the candidate to explain embeddings "in plain terms, no jargon."
+* Asking for a simple explanation of what a system prompt is.
+* Focusing on understanding and practical reasoning rather than requiring advanced theoretical explanations.
+
+This confirms that the attempts-based calibration rule works when tested against a candidate with a heavier struggle profile.
+
+---
+
+## Context Maintenance
+
+**PASS**
+
+The interviewer maintained a consistent understanding of Gerald's background throughout the conversation.
+
+The candidate's IT support experience was repeatedly used to connect new questions to previous answers and existing knowledge.
+
+The interview therefore felt like one continuous conversation rather than a sequence of unrelated curriculum questions.
+
+---
+
+## Conversational Quality
+
+**PASS**
+
+The interview remained warm and conversational without losing technical substance.
+
+Examples of successful behavior included:
+
+* Acknowledging Gerald's honesty about concepts that took multiple attempts.
+* Connecting his existing operational experience to new AI concepts.
+* Using his IT support background to frame technical questions.
+* Avoiding unnecessary jargon when the attempts-based calibration required simpler explanations.
+
+The interviewer did not feel like it was simply reading a fixed list of questions.
+
+---
+
+## Guardrail Check
+
+**PASS**
+
+Gerald had:
+
+* Failed days: 8, 10, 22
+* Skipped days: 27, 28
+
+None of these were directly questioned or surfaced as interview topics.
+
+The interviewer restricted questioning to the candidate's eligible passed-day pool.
+
+---
+
+## Mandatory Requirements
+
+* ✅ Conducted a conversational technical interview
+* ✅ Asked at least 8 primary questions
+* ✅ Covered at least 4 distinct curriculum modules
+* ✅ Generated grounded follow-ups
+* ✅ Maintained conversation context
+* ✅ Produced structured feedback
+* ✅ Never asked about skipped days
+* ✅ Never asked about failed days
+* ✅ Applied attempts-based difficulty calibration
+* ✅ Applied job-role prioritization
+* ✅ Applied the final-question follow-up rule
+
+---
+
+## v2 vs v3
+
+| Metric                        | Persona B v2 |  Persona B v3 |
+| ----------------------------- | -----------: | ------------: |
+| Primary questions             |            8 |             8 |
+| Distinct curriculum days      |            7 |             5 |
+| Modules                       |            4 |             4 |
+| Follow-ups                    |          7/8 |       **8/8** |
+| Generic verification          |         None |      **None** |
+| Final-question acknowledgment |      Missing |   **Present** |
+| Job-role calibration          |   Unverified | **Confirmed** |
+| Attempts calibration          |   Unverified | **Confirmed** |
+| Context maintenance           |         Good |      **Good** |
+| Conversational tone           |       Strong |    **Strong** |
+| Structured feedback           |            ✅ |             ✅ |
+
+The lower number of curriculum days in v3 is expected because Gerald had only five eligible passed days. The interviewer correctly prioritized the available passed-day pool instead of asking about failed or skipped days.
+
+The important improvement from v2 to v3 was the **final-question handling**, which was confirmed to work without causing regressions.
+
+---
+
+## Regression Check
+
+**No regressions identified.**
+
+The v3 change did not negatively affect:
+
+* Follow-up quality
+* Conversational tone
+* Job-role framing
+* Attempts-based calibration
+* Context maintenance
+* Curriculum guardrails
+* Feedback structure
+
+No generic verification questions appeared, and no silent follow-up skips occurred.
+
+---
+
+## Decision
+
+**Persona B v3 is FINAL.**
+
+The Persona B iteration cycle is complete:
+
+* **v1 → v2:** improved follow-up quality, job-role fallback, and explicit follow-up decisions
+* **v2 → v3:** fixed final-question follow-up handling
+* **v3:** validated against a candidate specifically chosen to exercise job-role and attempts-based calibration
+
+### Final Status
+
+**Persona B v3 — FINALIZED ✅**
+
+No further Persona B prompt changes are required.
+
+
 
 
 
