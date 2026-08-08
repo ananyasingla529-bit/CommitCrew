@@ -213,3 +213,110 @@ Before integrating the final prompt, confirm:
 **API provider:** Groq
 
 **Deployment:** Vercel
+
+## 12. Example Input
+
+A phase request should provide Claude with the relevant prompt and the supporting data required for that phase.
+
+Conceptually, the input includes:
+
+```text
+Phase prompt:
+[The current phase-specific instructions]
+
+Supporting data:
+[Candidate data, curriculum data, conversation context,
+or other files/text requested by the phase prompt]
+```
+
+For an interview turn, the supporting context may include the candidate profile, eligible curriculum information, and previous conversation messages.
+
+The exact data included should follow the requirements of the current phase prompt.
+
+---
+
+## 13. Example Output
+
+During an active interview, Claude returns the next interview response according to the output format specified by the current prompt.
+
+When the interview is complete, Claude indicates completion using:
+
+```json
+{
+  "done": true
+}
+```
+
+The application should use this signal to stop the interview loop and process/display the final feedback returned by Claude.
+
+A completed response may therefore contain:
+
+```json
+{
+  "done": true,
+  "feedback": {
+    "summary": "Hiring-oriented summary based on the interview evidence.",
+    "strengths": [
+      "Evidence-based strength from the candidate's responses."
+    ],
+    "gaps": [
+      "Evidence-based area where the candidate would need ramp-up."
+    ],
+    "next": [
+      "Relevant development or follow-up recommendation."
+    ]
+  }
+}
+```
+
+The exact feedback fields should follow the final Persona B prompt and the application's current parsing implementation.
+
+---
+
+## 14. Integration Edge Cases
+
+### Candidate has failed or skipped curriculum days
+
+Persona B must not ask questions about failed or skipped days.
+
+Only eligible passed curriculum content should be used.
+
+### Candidate has few eligible curriculum days
+
+If the candidate has a thin profile, Persona B may revisit eligible material rather than inventing new curriculum content or using failed/skipped days.
+
+### Candidate gives a vague answer
+
+Persona B should:
+
+1. Ask one grounded follow-up.
+2. If the answer remains vague, use one differently angled second attempt.
+3. If the answer remains vague again, explicitly identify the evidence gap.
+4. Record the gap for final feedback.
+5. Move on.
+6. Never push a third time.
+
+### Candidate gives an exhaustive answer
+
+If another follow-up would be redundant, Persona B should explicitly acknowledge that and move on rather than silently skipping the follow-up.
+
+### Final interview question
+
+The final primary question follows the same follow-up decision rule as every other question. If no follow-up is necessary, Persona B should explicitly acknowledge that before closing the interview.
+
+### Interview completion
+
+When Claude returns:
+
+```json
+{
+  "done": true
+}
+```
+
+the application should stop requesting additional interview turns and proceed to the final feedback stage.
+
+### API/model details change
+
+The integration guide documents the confirmed platform-level setup but does not hard-code an unconfirmed model name or request schema. If the Groq model or application request format changes, Person 1 should update the implementation-specific details without changing the Persona B behavioral rules unless the prompt itself is intentionally revised.
+
