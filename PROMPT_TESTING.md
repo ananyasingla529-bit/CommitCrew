@@ -1113,6 +1113,207 @@ After the Gerald test:
 Do not make additional prompt changes before this validation unless the test
 reveals a concrete failure.
 
+# Persona C v2 — Validation Test: Gerald Combs (CAND-010)
 
+## Test Purpose
+
+Second and final validation pass for Persona C v2 using Gerald Combs.
+
+This test was specifically chosen to exercise behaviors that Emily Chen could
+not validate:
+
+- Attempts-based calibration with a high-attempt candidate
+- Failed/skipped-day protection
+- Thin-profile handling
+- Persona C identity under constrained curriculum coverage
+- Natural follow-up chaining without padding
+
+## Candidate Profile
+
+**Candidate:** Gerald Combs (CAND-010)
+
+**Role:** IT Support Specialist
+
+**Usable passed days:**
+
+- Day 1 — attempts 2
+- Day 7 — attempts 5
+- Day 12 — attempts 5
+- Day 16 — attempts 4
+- Day 31 — attempts 3
+
+**Failed days:** 8, 10, 22
+
+**Skipped days:** 27, 28
+
+---
+
+## Testing Report
+
+### Interview Structure
+
+| Metric | Result |
+|---|---|
+| Primary questions | **8** |
+| Distinct curriculum days | **5** — Days 1, 7, 12, 16, 31 |
+| Modules covered | **5** |
+| Follow-ups | **8/8** |
+| Generic filler follow-ups | **0** |
+
+Day 16 was revisited once, but the second discussion produced new signal
+around concurrency implementation rather than repeating the original question.
+
+### 1. Attempts-Based Calibration — PASS
+
+The interviewer correctly adjusted difficulty for Gerald's high-attempt days.
+
+- **Day 12 — 5 attempts:** Asked for a plain-language explanation of a
+  system prompt rather than a deep technical question.
+- **Day 7 — 5 attempts:** Asked what an embedding does "in your own words"
+  instead of requiring mathematical or implementation-level reasoning.
+- **Day 16 — 4 attempts:** Used a practical scaling scenario around 50
+  concurrent users rather than assuming production-level implementation
+  experience.
+
+The interviewer did not treat passing a day as evidence of deep mastery.
+
+### 2. Failed/Skipped-Day Protection — PASS
+
+The interviewer never asked about or referenced:
+
+- Failed: Days 8, 10, 22
+- Skipped: Days 27, 28
+
+All questions remained within Gerald's five eligible passed days.
+
+### 3. Thin-Profile Handling — PASS
+
+Gerald only had five usable curriculum days, yet Persona C reached the
+8-question minimum without inventing topics or padding the interview.
+
+Day 16 was revisited because it offered additional useful signal:
+
+- Initial discussion → understanding of concurrency risks
+- Revisit → distinction between recognizing a risk and actually implementing
+  a solution
+
+This produced new hiring signal rather than repetition.
+
+### 4. Persona C Identity — PASS
+
+Persona C's defining characteristics remained intact:
+
+- Casual, peer-like tone
+- Story-first opening
+- Candidate-led exploration
+- Flexible follow-up chaining
+- Natural topic revisits
+- No rigid one-follow-up-per-question structure
+- No explicit procedural narration about interview rules
+
+The interviewer opened with the capstone rather than automatically starting at
+Day 1 and repeatedly used Gerald's IT support background to shape the
+conversation.
+
+### 5. Follow-Up Quality — PASS
+
+Follow-ups naturally explored:
+
+- **Consequence/failure:** What could cause the chatbot to hang?
+- **Scaling:** What would strain with 50 concurrent users?
+- **Trade-off/reality check:** Was concurrency actually handled or merely
+  recognized as a risk?
+
+The follow-ups were not distributed mechanically as a checklist.
+
+Two softer follow-ups were appropriate for the candidate's high-attempt
+profile and remained conversational rather than becoming generic filler.
+
+No generic verification questions appeared.
+
+### 6. Context Maintenance — PASS
+
+The interviewer consistently incorporated Gerald's IT support background into
+later questions.
+
+Examples included:
+
+- Applying his operational experience to diagnosing a hanging request
+- Connecting environment consistency to his previous server experience
+- Framing system prompts as a configuration/policy concept
+
+This created continuity across otherwise separate curriculum days.
+
+### 7. Repetition / Padding — PASS
+
+No unnecessary repetition was identified.
+
+The single revisited day (Day 16) generated new information about the gap
+between understanding a scalability risk and implementing a solution.
+
+### 8. Structured Feedback — PASS
+
+The final response used the required schema:
+
+- `summary`
+- `strengths`
+- `gaps`
+- `next`
+
+Feedback remained informal and concrete, with observations grounded in
+Gerald's actual answers.
+
+### 9. Naturalness — PASS
+
+The interview remained conversational and peer-like rather than becoming a
+formal quiz or rigid evaluation script.
+
+---
+
+## Regressions
+
+**None identified.**
+
+Persona C v2 maintained the improvements from the Emily test while also
+passing the high-attempt, thin-profile, and failed/skipped-day validation
+conditions introduced by the Gerald test.
+
+---
+
+## Persona C v2 Final Validation Summary
+
+| Behavior | Emily Chen | Gerald Combs | Result |
+|---|---|---|---|
+| Follow-up diagnostic quality | PASS | PASS | **PASS** |
+| Rich-profile breadth | PASS | N/A — thin profile | **PASS** |
+| Attempts calibration | Not exercised | PASS | **PASS** |
+| Failed/skipped guardrail | Not exercised | PASS | **PASS** |
+| Thin-profile handling | N/A — rich profile | PASS | **PASS** |
+| Persona C identity | PASS | PASS | **PASS** |
+| Flexible chaining | PASS | PASS | **PASS** |
+| Structured feedback | PASS | PASS | **PASS** |
+| Naturalness | PASS | PASS | **PASS** |
+
+## Final Recommendation
+
+**Persona C v2 is FINAL.**
+
+Both required validation profiles passed:
+
+- **Emily Chen:** rich, low-attempt profile → validated diagnostic follow-ups,
+  story-first selection, and rich-profile breadth.
+- **Gerald Combs:** thin, high-attempt profile with real failed/skipped days →
+  validated attempts calibration, guardrails, thin-profile handling, and
+  Persona C identity.
+
+No Persona C v3 change is required.
+
+### Phase 1 Persona Status
+
+- **Persona A v4 — FINAL**
+- **Persona B v3 — FINAL**
+- **Persona C v2 — FINAL**
+
+All three personas have now completed individual validation.
 
 
