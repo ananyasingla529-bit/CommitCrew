@@ -121,7 +121,7 @@ Next refinement:
 - Replace the 10-12 question target with an 8-10 question target while
   keeping the improved follow-up rules from Version 3.
 
-## Persona A v4 — Final Testing
+## Persona A v4 
 
 ### Change Applied
 
@@ -238,6 +238,183 @@ The Persona A iteration cycle is complete:
 
 No further Persona A prompt changes are required.
 # Prompt Testing
+
+## Persona A v5 — Thin-Profile Retest
+
+### Change Applied
+
+Persona A v5 introduced one targeted change from Persona A v4:
+
+- Added a thin-profile fallback for candidates with fewer than 8 eligible
+  passed days.
+- Once every eligible day has been asked about once, the interviewer may
+  revisit previously covered eligible days from a genuinely different angle
+  until the normal ~8-question minimum is reached, or until no meaningful
+  new question remains.
+- Revisited questions must not repeat or lightly rephrase earlier questions.
+- Revisit questions must be grounded in the candidate's actual completed work
+  and should connect naturally to something the candidate said earlier.
+- Failed/skipped days remain completely off-limits.
+
+No other Persona A behavior was intentionally changed.
+
+### Test Candidate
+
+**Gerald Combs (CAND-010)**
+
+Gerald was selected because he has a thin eligible-day pool:
+
+- Day 1 — 2 attempts
+- Day 7 — 5 attempts
+- Day 12 — 5 attempts
+- Day 16 — 4 attempts
+- Day 31 — 3 attempts
+
+Failed days:
+
+- Day 8
+- Day 10
+- Day 22
+
+Skipped days:
+
+- Day 27
+- Day 28
+
+### Test Results
+
+| Metric | Result |
+| --- | ---: |
+| Eligible curriculum days | 5 |
+| Primary questions | **8** |
+| Distinct curriculum days | **5** |
+| Follow-ups | **8/8** |
+| Generic verification questions | **0** |
+| Failed/skipped days referenced | **0** |
+
+### Thin-Profile Handling
+
+**PASS**
+
+The candidate had only five eligible passed days, so reaching the normal
+8-question minimum required revisiting previously covered days.
+
+The interviewer revisited Days 1, 12, and 16 from genuinely different angles:
+
+- Day 1 → practical setup advice for a new hire
+- Day 12 → diagnosing vague prompts before testing them
+- Day 16 → concurrent requests and session isolation
+
+These were not repetitions or light rephrasings of the original questions.
+
+### Revisit Quality
+
+**PASS**
+
+Each revisit produced new signal and was grounded in something Gerald had
+already said.
+
+The interviewer did not announce the revisits procedurally with phrases such
+as "let's go back to Day X." Instead, transitions connected naturally to
+Gerald's earlier answers.
+
+### Follow-Up Quality
+
+**PASS**
+
+All 8 primary questions received grounded follow-ups.
+
+Follow-ups continued to use the required four types:
+
+- Trace a dependency
+- Explore a consequence
+- Examine a trade-off
+- Probe a failure/scaling scenario
+
+No generic "did you test/measure that?" questions appeared.
+
+### Guardrail Check
+
+**PASS**
+
+The interviewer never asked about or referenced Gerald's:
+
+- Failed days: 8, 10, 22
+- Skipped days: 27, 28
+
+No fabricated completion was introduced.
+
+### Persona Fidelity
+
+**PASS**
+
+The systems-thinking identity remained intact.
+
+Even the revisits continued to probe how components behave in practical system
+conditions, especially the Day 16 concurrency question.
+
+### Feedback Quality
+
+**PASS**
+
+The final feedback correctly distinguished between:
+
+- Capabilities demonstrated by Gerald
+- Gaps or uncertainties Gerald himself identified
+- Areas that remained structurally unverified because the eligible pool was
+  limited
+
+This is especially important for thin profiles because lack of evidence should
+not be treated as evidence of weakness.
+
+### Regression Check
+
+**No regressions identified.**
+
+The following Persona A v4 behaviors remained intact:
+
+- SHIP_IT prioritization
+- Dependency tracing
+- Attempts-based calibration
+- Typed follow-ups
+- Failed/skipped-day protection
+- Natural transitions
+- No repetition
+- Evidence-based structured feedback
+
+### v4 → v5 Conclusion
+
+Persona A v5 successfully fixes the thin-profile defect:
+
+> Candidates with fewer than 8 eligible days no longer cause the interview to
+> stop early simply because the eligible pool is exhausted.
+
+The Gerald test produced:
+
+**5 eligible days → 8 primary questions**
+
+while maintaining:
+
+**8/8 grounded typed follow-ups**
+
+with:
+
+**0 failed/skipped-day violations**
+
+and no meaningful repetition.
+
+### Recommendation
+
+**Persona A v5 is FINAL.**
+
+The Persona A iteration cycle is now complete:
+
+- **v1 → v2:** improved question-count floor, follow-up handling, and transitions
+- **v2 → v3:** replaced generic verification with typed follow-ups
+- **v3 → v4:** fixed rich-profile breadth-over-depth behavior
+- **v4 → v5:** fixed thin-profile early termination through grounded revisits
+
+---
 
 ## Persona B — Baseline Testing
 
@@ -755,6 +932,79 @@ The Persona B iteration cycle is complete:
 **Persona B v3 — FINALIZED ✅**
 
 No further Persona B prompt changes are required.
+
+## Persona B Retest — Vague Answer Escalation
+
+### Test Candidate
+
+David Miller — Business Analyst
+
+### Test Configuration
+
+* Persona: B — The Practical Recruiter
+* Prompt: Unmodified Persona B baseline
+* Same candidate used for baseline comparison
+* 8 primary questions
+* 4 modules
+* Deliberately vague answers introduced on Day 12 and Day 10
+
+### Results
+
+| Criterion                                             | Result |
+| ----------------------------------------------------- | ------ |
+| Detects vague/non-concrete answers                    | ✅      |
+| Explicitly identifies lack of evidence                | ✅      |
+| Records vague answers as feedback gaps                | ✅      |
+| Pushes beyond the initial vague answer                | ✅      |
+| Consistent escalation threshold                       | ❌      |
+| Uses an alternative probing strategy before giving up | ❌      |
+| Maintains conversational recruiter style              | ✅      |
+| Overall interview flow                                | ✅      |
+
+### Confirmed Defect
+
+Persona B recognizes vague answers and explicitly states that the candidate has not provided enough concrete evidence. However, its escalation behavior is inconsistent.
+
+On Day 12, the interviewer continued probing after multiple vague responses before eventually stopping.
+
+On Day 10, the interviewer stopped after a shorter escalation.
+
+In neither case did the interviewer consistently apply a defined escalation strategy such as:
+
+1. requesting a concrete example,
+2. if still vague, reframing the question or providing a smaller concrete anchor,
+3. then recording the gap and moving on.
+
+### What Is Working
+
+The transparency behavior should be preserved.
+
+The interviewer correctly:
+
+* identified that the answers remained vague,
+* did not pretend the answers were sufficient,
+* explicitly communicated the evidence gap,
+* recorded the issue in the final feedback.
+
+### Verdict
+
+**CONFIRMED DEFECT — Persona B escalation behavior**
+
+The defect is limited to the lack of a consistent escalation rule for repeatedly vague answers.
+
+### Recommended Fix
+
+Make the escalation behavior explicit and bounded.
+
+The interviewer should use a consistent progression when an answer remains vague:
+
+1. Ask for a concrete example or specific evidence.
+2. If the response remains vague, try one different, simpler or more specific angle to help the candidate provide evidence.
+3. If the answer is still non-concrete, explicitly identify the evidence gap, record it as a gap, and move on.
+
+Do not require unlimited probing or repeatedly ask the same question.
+
+**No prompt modification has been made yet.**
 
 ## Persona C — Baseline Testing
 
@@ -1536,7 +1786,7 @@ The evidence does not justify a more complex routing system yet. Job role/type a
 
 ### Final Versions
 
-- Persona A → **v4 FINAL**
+- Persona A → **v5 FINAL**
 - Persona B → **v3 FINAL**
 - Persona C → **v2 FINAL**
 
@@ -1564,5 +1814,55 @@ The evidence does not justify a more complex routing system yet. Job role/type a
 **None.**
 
 The three personas are considered finalized and ready for implementation/integration.
+
+## Phase 2 — Persona B Baseline Test
+
+### Test Candidate
+David Miller — Business Analyst
+
+### Test Configuration
+- Persona: B — The Practical Recruiter
+- Primary questions: 8
+- Distinct curriculum days: 8
+- Modules covered: 4
+- Candidate profile: Same David Miller profile used for persona comparison
+
+### Results
+
+| Criterion | Result |
+|---|---|
+| Business/job-role framing | ✅ Strong |
+| Attempts-based calibration | ✅ Worked |
+| Follow-ups grounded in candidate answers | ✅ Strong |
+| Generic verification avoided | ✅ |
+| Skipped/failed days avoided | ✅ |
+| 8+ primary questions | ✅ |
+| 4+ modules | ✅ |
+| Conversational recruiter style | ✅ Strong |
+| Feedback format | ✅ Correct |
+
+### Strengths Observed
+
+- Questions consistently connected AI concepts to business/stakeholder concerns.
+- Attempts were used appropriately to adjust question difficulty and framing.
+- Follow-ups referenced specific parts of David's answers rather than using generic prompts.
+- Persona B maintained a natural hiring-manager tone.
+- The interviewer correctly avoided skipped/failed curriculum days.
+- Feedback accurately identified David's strongest and weakest areas.
+
+### Observation
+
+Persona B detected when David's answers were too abstract and asked for
+concrete examples. However, when the second answer remained somewhat
+abstract, the interviewer moved on after one additional push.
+
+This is an observation rather than a confirmed defect. Further persona
+comparison is needed before changing the prompt.
+
+### Verdict
+
+Persona B baseline test: **PASS**
+
+No prompt changes made yet.
 
 
