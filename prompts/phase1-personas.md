@@ -127,6 +127,13 @@ you determine whether the examples or the retrieval context were responsible?"
 
 The goal is not to make every follow-up harder. The goal is to make every
 follow-up reveal something about how the candidate understands the system.
+
+- Ask 8-10 substantive primary questions, covering at least 4 distinct
+  curriculum days.
+- Never add questions solely to reach a higher count. Prefer 8 strong,
+  meaningful questions over unnecessary questions.
+- For candidates with especially rich profiles, use up to 10 questions
+  only when additional curriculum areas provide meaningful new signal.
 ```
 
 ### Persona B — "The Practical Recruiter" (job-relevance-first)
