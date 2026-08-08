@@ -194,7 +194,7 @@ export async function POST(request: Request) {
       totalDistinctDays: 0,
       questionsPerDay: {},
       isComplete: false,
-      completionReason: "Starting interview. Need 8 questions across 4+ days.",
+      completionReason: "Starting interview. Need at least 8 questions across 4+ days.",
     };
 
     sessions.set(sessionId, { structure1, structure2, structure3, persona });
@@ -257,8 +257,10 @@ export async function POST(request: Request) {
     message: aiReply,
   });
 
-  // Step 6: update tracking
-  updateStructure3(session.structure3, dayAsked);
+  // Step 6: update tracking — target question count depends on the
+  // candidate's profile richness and the persona's own stated preference
+  const targetQuestions = getTargetQuestionCount(session.structure1, session.persona);
+  updateStructure3(session.structure3, dayAsked, targetQuestions);
 
   return NextResponse.json({
     reply: aiReply,
@@ -346,7 +348,33 @@ your persona's style and strategy above. Ask exactly one question.`;
   return groqMessages;
 }
 
-function updateStructure3(structure3: Structure3, dayAsked: number): void {
+/**
+ * A candidate counts as "rich" when they have a good-sized pool of passed
+ * days, mostly cleared on the first attempt — this mirrors how Person 2's
+ * persona docs describe a candidate worth going deeper on (e.g. Emily Chen).
+ */
+function isRichProfile(structure1: Structure1): boolean {
+  return structure1.eligibleDays.length >= 8;
+}
+
+/**
+ * Work out the target question count for this interview.
+ * - Always at least 8 (mandatory minimum from the spec).
+ * - Persona A/C explicitly prefer 10-12 questions for rich profiles.
+ * - Persona B's own guidance caps around 8-10, so give it a smaller bump.
+ * - Thin profiles (fewer than 8 eligible days) always stay at the 8 floor.
+ */
+function getTargetQuestionCount(structure1: Structure1, persona: "A" | "B" | "C"): number {
+  if (!isRichProfile(structure1)) return 8;
+  if (persona === "B") return 10;
+  return 12; // Persona A and C
+}
+
+function updateStructure3(
+  structure3: Structure3,
+  dayAsked: number,
+  targetQuestions: number
+): void {
   structure3.totalQuestionTurns++;
 
   if (!structure3.daysAskedAbout.includes(dayAsked)) {
@@ -360,14 +388,14 @@ function updateStructure3(structure3: Structure3, dayAsked: number): void {
   structure3.questionsPerDay[dayAsked]++;
 
   structure3.isComplete =
-    structure3.totalQuestionTurns >= 8 && structure3.totalDistinctDays >= 4;
+    structure3.totalQuestionTurns >= targetQuestions && structure3.totalDistinctDays >= 4;
 
   if (structure3.isComplete) {
     structure3.completionReason = `Complete! ${structure3.totalQuestionTurns} questions across ${structure3.totalDistinctDays} days.`;
   } else {
-    const questionsNeeded = Math.max(0, 8 - structure3.totalQuestionTurns);
+    const questionsNeeded = Math.max(0, targetQuestions - structure3.totalQuestionTurns);
     const daysNeeded = Math.max(0, 4 - structure3.totalDistinctDays);
-    structure3.completionReason = `Progress: ${structure3.totalQuestionTurns}/8 questions, ${structure3.totalDistinctDays}/4 days. Need ${questionsNeeded} more questions and ${daysNeeded} more days.`;
+    structure3.completionReason = `Progress: ${structure3.totalQuestionTurns}/${targetQuestions} questions, ${structure3.totalDistinctDays}/4 days. Need ${questionsNeeded} more questions and ${daysNeeded} more days.`;
   }
 }
 
