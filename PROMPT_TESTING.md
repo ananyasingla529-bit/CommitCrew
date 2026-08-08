@@ -959,7 +959,159 @@ while improving:
 
 **Baseline Decision:** Keep Persona C v1 unchanged as the control version and test the targeted changes in Persona C v2.
 
+# Persona C v2 — Test Run: Gerald Combs (CAND-010)
 
+## Test Purpose
+
+Second validation pass for Persona C v2 using Gerald Combs, selected to test
+behaviors that Emily Chen could not exercise:
+
+- Attempts-based difficulty calibration under a high-attempt profile
+- Protection against asking about failed/skipped days
+- Persona C's behavior with a thinner pool of usable curriculum days
+- Whether rich-profile breadth guidance avoids padding when the candidate has
+  limited passed-day coverage
+- Whether Persona C's casual, peer-style identity remains intact under these
+  constraints
+
+## Candidate Profile
+
+**Candidate:** Gerald Combs (CAND-010)
+
+**Role:** IT Support Specialist
+
+**Passed, non-failed, non-skipped days available:**
+- Day 1 — attempts 2
+- Day 7 — attempts 5
+- Day 12 — attempts 5
+- Day 16 — attempts 4
+- Day 31 — attempts 3
+
+**Failed days:** 8, 10, 22
+
+**Skipped days:** 27, 28
+
+This is intentionally a thin-profile candidate compared with Emily Chen.
+The test therefore checks whether Persona C follows the signal rather than
+artificially expanding the interview to satisfy a question-count target.
+
+## Expected Behaviors Under Test
+
+### 1. Attempts-Based Calibration
+
+Persona C v2 should visibly adjust question difficulty based on attempts.
+
+For Gerald's high-attempt days (especially Days 7, 12, and 16), questions should
+lean toward simple explanation and practical understanding rather than assuming
+deep mastery.
+
+The interviewer should not punish the candidate for struggling during the
+cohort. The goal is to determine what they actually understand now.
+
+### 2. Failed/Skipped-Day Guardrail
+
+The interviewer must never ask Gerald about:
+
+- Day 8
+- Day 10
+- Day 22
+- Day 27
+- Day 28
+
+These days can inform the candidate's available profile internally, but should
+not become interview questions.
+
+### 3. Thin-Profile Handling
+
+Gerald only has five usable passed days.
+
+Persona C should still reach the required minimum of:
+
+- 8+ primary questions
+- 4+ modules
+
+However, it should achieve this through useful depth and natural thread
+exploration rather than padding the interview with irrelevant or unavailable
+days.
+
+Revisiting a useful day is acceptable when it produces genuinely different
+signal.
+
+### 4. Persona C Identity
+
+The interviewer should remain:
+
+- Casual
+- Curious
+- Peer-like
+- Candidate-led
+- Story-first
+- Flexible with follow-up chaining
+
+It should NOT become a rigid Persona A/B-style interview merely because the
+candidate has a thin profile.
+
+Avoid explicit procedural narration such as:
+
+> "That's a complete answer, so I don't think we need to dig further."
+
+unless it genuinely fits the conversational flow.
+
+### 5. Follow-Up Quality
+
+Follow-ups should continue to naturally pull toward:
+
+- Dependency
+- Consequence
+- Trade-off
+- Failure/scaling scenario
+
+They should not become a checklist.
+
+Generic filler such as:
+
+- "Did you test that?"
+- "Can you tell me more?"
+- "Was that verified?"
+
+should be avoided unless the question is specifically relevant to testing or
+verification.
+
+## Validation Status
+
+**Status:** Pending test
+
+**Emily Chen v2 test:** PASS
+
+The Emily test confirmed:
+
+- Follow-up diagnostic quality improved
+- Generic filler was eliminated
+- Rich-profile breadth improved from 8 questions / 7 days to 10 questions /
+  10 days
+- Story-first opening remained intact
+- Flexible chaining remained intact
+- Persona C did not drift toward Persona A/B rigidity
+- Feedback remained informal and concrete
+
+**Remaining validation gap:**
+
+Gerald Combs is required to validate attempts-based calibration and
+failed/skipped-day protection under real pressure.
+
+## Decision Rule
+
+After the Gerald test:
+
+- **PASS with no meaningful regression:** Persona C v2 can be finalized.
+- **Attempts calibration works but another Persona C-specific issue appears:**
+  make a targeted v3 change.
+- **Failed/skipped guardrail breaks:** fix the guardrail before finalizing.
+- **Persona C loses its peer-chat identity:** revert the problematic change and
+  make the smallest possible correction.
+
+Do not make additional prompt changes before this validation unless the test
+reveals a concrete failure.
 
 
 
