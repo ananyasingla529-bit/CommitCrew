@@ -291,3 +291,121 @@ while improving:
 
 **Baseline Decision:** Keep Persona B v1 unchanged as the control version and test the above changes in Persona B v2.
 
+## Persona B — v2 Testing
+
+### Test Information
+
+* **Persona:** Persona B — The Practical Recruiter
+* **Candidate:** Emily Chen (CAND-003)
+* **Version:** v2
+* **Primary Questions:** 8
+* **Distinct Curriculum Days:** 7
+* **Modules Covered:** 4
+* **Follow-ups:** 7/8
+* **Structured Feedback:** ✅
+* **Mandatory Requirements:** ✅ Mostly met
+
+---
+
+## v2 Results
+
+### What Improved
+
+1. **Generic verification questions were eliminated**
+
+   * No generic "did you test/measure that?" follow-ups appeared.
+   * Follow-ups consistently used dependency tracing, consequences, trade-offs, or failure/scaling scenarios.
+
+2. **Follow-up quality improved**
+
+   * Questions were more diagnostic and grounded in Emily's actual answers.
+   * Example: the Day 22 follow-up explored the coordination failure introduced by a multi-agent architecture.
+
+3. **Context linking improved**
+
+   * The Day 21 follow-up explicitly connected the agent architecture to the earlier Day 13 function-calling implementation.
+
+4. **Conversational personality was preserved**
+
+   * The practical recruiter tone remained intact.
+   * Reactions such as acknowledging honesty and practical judgment continued to make the interview feel natural.
+
+---
+
+## Remaining Issues
+
+### 1. Final-question follow-up was not explicitly acknowledged
+
+The final Day 31 question ended directly with the interview closing.
+
+Unlike the mid-interview questions, it did not explicitly state why no further follow-up was needed.
+
+**Result:** 7/8 follow-ups were clearly accounted for.
+
+This is a small consistency issue rather than a major functional failure.
+
+---
+
+### 2. Job-role prioritization remains unverified
+
+Emily is an AI Engineer, so most of the curriculum is naturally relevant to her role.
+
+The fallback rule was added successfully, but this test did not demonstrate that it actually changes day selection in a meaningful way.
+
+**Conclusion:** The rule exists, but requires a more differentiated candidate to validate.
+
+---
+
+### 3. Attempts-based calibration remains unverified
+
+Emily's profile is dominated by first-attempt passes, so the interview only exercised the "justify a trade-off" difficulty branch.
+
+The higher-attempt branch that should produce simpler, PM-style explanations was not exercised.
+
+**Conclusion:** This is a test coverage limitation, not evidence that the prompt rule is broken.
+
+---
+
+## v1 vs v2
+
+| Metric               |      v1 |     v2 | Result    |
+| -------------------- | ------: | -----: | --------- |
+| Primary questions    |       8 |      8 | Same      |
+| Distinct days        |       7 |      7 | Same      |
+| Modules              |       4 |      4 | Same      |
+| Follow-ups           |     6/8 |    7/8 | Improved  |
+| Generic verification | Present |   None | Improved  |
+| Context linking      |    Good | Better | Improved  |
+| Conversational tone  |  Strong | Strong | Preserved |
+| Structured feedback  |       ✅ |      ✅ | Preserved |
+
+---
+
+## Regression Check
+
+**No major regressions identified.**
+
+The only remaining issue is the lack of an explicit follow-up decision on the final question.
+
+The three targeted v2 changes otherwise behaved as intended.
+
+---
+
+## Decision
+
+**Do not lock Persona B as final yet.**
+
+Create Persona B v3 with only one targeted change:
+
+> If the current question is the final interview question, still explicitly acknowledge that no additional follow-up is needed before closing the interview and generating feedback.
+
+Do not make any other prompt changes.
+
+After v3, test Persona B against a candidate whose profile can exercise the currently unverified rules:
+
+* A candidate with a job role less directly related to AI engineering, and/or
+* A candidate with several higher-attempt curriculum days.
+
+This will validate job-role prioritization and attempts-based difficulty calibration before Persona B is finalized.
+
+
