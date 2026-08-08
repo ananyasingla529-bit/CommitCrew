@@ -756,6 +756,210 @@ The Persona B iteration cycle is complete:
 
 No further Persona B prompt changes are required.
 
+## Persona C — Baseline Testing
+
+### Test Information
+
+* **Persona:** Persona C — The Curious Peer
+* **Candidate:** Emily Chen (CAND-003)
+* **Version:** Original / Unmodified
+* **Primary Questions:** 8
+* **Distinct Curriculum Days:** 7
+* **Modules Covered:** 4
+* **Follow-ups:** 8
+* **Structured Feedback:** ✅
+* **Mandatory Requirements:** ✅ Met
+
+---
+
+## Baseline Results
+
+### Strengths
+
+1. **Strong free-flowing conversation**
+
+   * The interviewer naturally followed interesting threads instead of rigidly moving from one question to another.
+   * The MCP discussion received multiple follow-ups before moving to another curriculum area.
+   * The agent discussion similarly continued for an extra exchange.
+
+2. **Story-first day selection worked**
+
+   * The interview opened with Day 23 (MCP) rather than early curriculum content.
+   * This matched Persona C's instruction to start with whichever passed day creates the strongest conversation.
+
+3. **Most natural conversational tone so far**
+
+   * Reactions such as "Ha, fair, that tracks" and "Oh totally" made the interaction feel like a genuine peer conversation.
+   * The interviewer remained technically curious without sounding like a formal interviewer.
+
+4. **Context was maintained**
+
+   * Follow-ups referenced Emily's actual answers.
+   * The interviewer was able to stay on a topic for multiple exchanges when the candidate provided something interesting.
+
+---
+
+## Weaknesses Identified
+
+### 1. Follow-up quality was less diagnostic than Personas A/B
+
+One follow-up approached a generic verification pattern:
+
+> "Did switching to the agent fix it cleanly, or did you run into new weirdness?"
+
+The question was relevant, but it did not clearly investigate a dependency, consequence, trade-off, or failure/scaling scenario.
+
+**Impact:** Persona C's flexible follow-up style can occasionally produce less diagnostic questions than Personas A and B.
+
+---
+
+### 2. Rich candidate profile was underused
+
+Emily has a rich profile with multiple passed days, but the interview stopped at:
+
+* 8 primary questions
+* 7 curriculum days
+
+This is technically compliant with the minimum requirements, but it leaves additional useful curriculum signal unexplored.
+
+**Impact:** Persona C's exploratory style should not become an excuse to stop early when a rich candidate has additional relevant passed areas worth discussing.
+
+---
+
+### 3. Attempts-based calibration was not meaningfully tested
+
+Emily's tested profile is dominated by first-attempt passes.
+
+Therefore, the "go easier where attempts were high" rule was not meaningfully exercised.
+
+**Impact:** This is a test coverage limitation rather than evidence that the prompt rule is broken.
+
+A high-attempt candidate should be used in a later test to verify this behavior.
+
+---
+
+## Mandatory Requirements
+
+* ✅ Conducted a conversational technical interview
+* ✅ Asked 8 primary questions
+* ✅ Covered 4+ distinct curriculum modules
+* ✅ Maintained conversation context
+* ✅ Generated follow-up questions
+* ✅ Produced structured feedback
+* ✅ Did not ask about skipped/failed days
+
+---
+
+## Baseline Comparison Signal
+
+Persona C already demonstrates a meaningful difference from Personas A and B:
+
+* **Persona A:** strongest systems/dependency reasoning
+* **Persona B:** strongest job-relevance and hiring signal
+* **Persona C:** strongest exploratory conversation and natural peer interaction
+
+The Persona C refinement should preserve this distinction rather than turning it into another rigid interviewer.
+
+---
+
+## Planned Persona C v2 Improvements
+
+The baseline prompt should remain unchanged as the control version. The following changes will be applied only in v2.
+
+### Fix 1 — Improve follow-up diagnostic quality
+
+Add guidance encouraging follow-ups to investigate one of these areas when appropriate:
+
+1. **Trace a dependency** — what earlier component or decision the answer relied on.
+2. **Explore a consequence** — what would happen downstream if the approach changed or failed.
+3. **Examine a trade-off** — why the candidate chose this approach over a plausible alternative.
+4. **Probe a failure/scaling scenario** — what would break under unusual input, edge cases, or increased scale.
+
+However, Persona C should **not** be forced into a rigid one-follow-up-per-question structure.
+
+The interviewer should still be able to:
+
+* Stay on an interesting thread for an extra exchange.
+* Follow something the candidate mentioned naturally.
+* Move on when the conversation has produced enough signal.
+
+The goal is **better diagnostic follow-ups without losing the peer-like flow**.
+
+---
+
+### Fix 2 — Improve rich-profile breadth
+
+When the candidate has many passed days and enough relevant curriculum areas remain available, do not stop at the 8-question minimum solely because the conversation has already produced strong answers.
+
+Prefer exploring another meaningful passed day when:
+
+* The current topic has already produced sufficient signal.
+* Another passed day can provide genuinely new evidence.
+* The additional question will not feel repetitive.
+
+Do not add questions solely to increase the count.
+
+Persona C should remain exploratory rather than becoming a rigid 10-12 question interviewer.
+
+---
+
+### Fix 3 — Preserve Persona C's defining behavior
+
+The v2 changes must **not** remove Persona C's core characteristics:
+
+* Casual peer-to-peer tone
+* Story-first topic selection
+* Flexible follow-up chaining
+* Candidate-led exploration
+* Genuine reactions to interesting answers
+* Informal but concrete feedback
+
+The purpose of v2 is to make the interview **more diagnostically useful**, not more scripted.
+
+---
+
+## Persona C v2 Testing Plan
+
+### Primary Test Candidate
+
+**Emily Chen (CAND-003)**
+
+Reason:
+
+* Same candidate as the Persona C baseline.
+* Rich passed-day profile.
+* Allows the v2 changes to be isolated and compared directly against v1.
+* Tests whether the rich-profile breadth issue improves without sacrificing naturalness.
+
+### Additional Validation Candidate
+
+After the Emily v2 test, use a candidate with:
+
+* Several higher-attempt passed days, and
+* A less directly AI-focused job role if available.
+
+This will verify that Persona C's attempts-based calibration and candidate-context behavior work outside the all-first-attempt Emily profile.
+
+---
+
+## Expected Outcome for Persona C v2
+
+The goal is to preserve Persona C's strongest baseline qualities:
+
+* Natural peer conversation
+* Flexible exploration
+* Strong short-term context
+* Story-first topic selection
+
+while improving:
+
+* Follow-up diagnostic quality
+* Rich-profile curriculum coverage
+* Evidence gathered per interview
+
+**Baseline Decision:** Keep Persona C v1 unchanged as the control version and test the targeted changes in Persona C v2.
+
+
 
 
 
