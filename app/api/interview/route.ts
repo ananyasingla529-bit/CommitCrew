@@ -268,6 +268,17 @@ async function handleInterviewRequest(request: Request) {
     }
 
     const structure1 = buildStructure1(candidate);
+
+    // A candidate with zero eligible (passed) days can't be interviewed at
+    // all — nothing downstream (selectNextDay, prompt building) can work
+    // without at least one real day to draw from.
+    if (structure1.eligibleDays.length === 0) {
+      return NextResponse.json(
+        { error: "candidate has no eligible passed curriculum days to interview on" },
+        { status: 400 }
+      );
+    }
+
     const persona = selectPersona(structure1.jobRole);
 
     const structure2: Structure2 = { sessionId, turns: [] };
@@ -284,9 +295,15 @@ async function handleInterviewRequest(request: Request) {
     const newSession: Session = { structure1, structure2, structure3, persona };
     await kv.set(sessionKey(sessionId), newSession);
 
+    // Progress info is extra, optional data for a UI progress bar — not
+    // required by technical-spec.md, but harmless to include alongside
+    // the required `reply`/`done` fields.
+    const initialTarget = getTargetQuestionCount(structure1, persona);
+
     return NextResponse.json({
       reply: "Welcome. Let's begin your interview.",
       done: false,
+      progress: buildProgress(0, initialTarget),
     });
   }
 
@@ -295,16 +312,29 @@ async function handleInterviewRequest(request: Request) {
   // ── CASE 2: Interview already complete ──
   if (session.structure3.isComplete) {
     const feedback = await generateFeedback(session.structure2, session.structure1, session.persona);
+    const finalTarget = getTargetQuestionCount(session.structure1, session.persona);
     await kv.del(sessionKey(sessionId));
 
     return NextResponse.json({
       reply: "Interview completed.",
       done: true,
       feedback,
+      progress: buildProgress(session.structure3.totalQuestionTurns, finalTarget),
     });
   }
 
   // ── CASE 3: Ongoing interview — ask next question ──
+
+  // A blank/whitespace-only message is rejected explicitly rather than
+  // silently ignored — silently proceeding to a new question would make
+  // it look like a blank submission was accepted, which is confusing for
+  // both the candidate and whatever UI is calling this endpoint.
+  if (typeof message === "string" && message.trim() === "") {
+    return NextResponse.json(
+      { error: "message cannot be empty" },
+      { status: 400 }
+    );
+  }
 
   // Step 1: record candidate's answer
   if (message) {
@@ -343,9 +373,12 @@ async function handleInterviewRequest(request: Request) {
   });
 
   // Step 6: update tracking — target question count depends on the
-  // candidate's profile richness and the persona's own stated preference
+  // candidate's profile richness and the persona's own stated preference;
+  // required distinct days is capped to what the candidate actually has
+  // available, so thin profiles can still reach completion
   const targetQuestions = getTargetQuestionCount(session.structure1, session.persona);
-  updateStructure3(session.structure3, dayAsked, targetQuestions);
+  const requiredDistinctDays = getRequiredDistinctDays(session.structure1);
+  updateStructure3(session.structure3, dayAsked, targetQuestions, requiredDistinctDays);
 
   // Step 7: save the updated session back to KV — unlike the old in-memory
   // Map, mutating the object in place does NOT persist anything on its own.
@@ -354,6 +387,7 @@ async function handleInterviewRequest(request: Request) {
   return NextResponse.json({
     reply: aiReply,
     done: false,
+    progress: buildProgress(session.structure3.totalQuestionTurns, targetQuestions),
   });
 }
 
@@ -490,10 +524,37 @@ function getTargetQuestionCount(structure1: Structure1, persona: "A" | "B" | "C"
   return 12; // Persona A and C
 }
 
+/**
+ * The spec's "4+ distinct days" requirement assumes a candidate has at
+ * least 4 eligible days to draw from. A thinner profile (fewer than 4
+ * eligible days total) could never satisfy a hardcoded "4" — the
+ * interview would run forever, since totalDistinctDays can't exceed the
+ * candidate's actual eligible day count. This caps the requirement to
+ * whatever the candidate genuinely has available.
+ */
+function getRequiredDistinctDays(structure1: Structure1): number {
+  return Math.min(4, structure1.eligibleDays.length);
+}
+
+/**
+ * Builds the progress object included in every response, per Person 3's
+ * requested shape: { questionsAsked, percentComplete }. Capped at 100 so
+ * a slightly-over count (shouldn't happen, but defensive) never shows
+ * over 100%.
+ */
+function buildProgress(questionsAsked: number, totalQuestions: number) {
+  const percentComplete =
+    totalQuestions > 0
+      ? Math.min(100, Math.round((questionsAsked / totalQuestions) * 100))
+      : 0;
+  return { questionsAsked, percentComplete };
+}
+
 function updateStructure3(
   structure3: Structure3,
   dayAsked: number,
-  targetQuestions: number
+  targetQuestions: number,
+  requiredDistinctDays: number
 ): void {
   structure3.totalQuestionTurns++;
 
@@ -508,14 +569,15 @@ function updateStructure3(
   structure3.questionsPerDay[dayAsked]++;
 
   structure3.isComplete =
-    structure3.totalQuestionTurns >= targetQuestions && structure3.totalDistinctDays >= 4;
+    structure3.totalQuestionTurns >= targetQuestions &&
+    structure3.totalDistinctDays >= requiredDistinctDays;
 
   if (structure3.isComplete) {
     structure3.completionReason = `Complete! ${structure3.totalQuestionTurns} questions across ${structure3.totalDistinctDays} days.`;
   } else {
     const questionsNeeded = Math.max(0, targetQuestions - structure3.totalQuestionTurns);
-    const daysNeeded = Math.max(0, 4 - structure3.totalDistinctDays);
-    structure3.completionReason = `Progress: ${structure3.totalQuestionTurns}/${targetQuestions} questions, ${structure3.totalDistinctDays}/4 days. Need ${questionsNeeded} more questions and ${daysNeeded} more days.`;
+    const daysNeeded = Math.max(0, requiredDistinctDays - structure3.totalDistinctDays);
+    structure3.completionReason = `Progress: ${structure3.totalQuestionTurns}/${targetQuestions} questions, ${structure3.totalDistinctDays}/${requiredDistinctDays} days. Need ${questionsNeeded} more questions and ${daysNeeded} more days.`;
   }
 }
 
