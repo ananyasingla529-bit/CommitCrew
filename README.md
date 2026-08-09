@@ -89,6 +89,6 @@ retrying resolves it.
 
 ## Team
 
-- **Person 1** — Backend, API, deployment
-- **Person 2** — Interview strategy, prompt engineering, persona design and validation
-- **Person 3** — Frontend/UI, candidate data integration
+- **Person 1**(Ananya Singla)[@ananyasingla529-bit] — Backend, API, deployment
+- **Person 2**(Charu Malhotra)[@charu-blabla] — Interview strategy, prompt engineering, persona design and validation
+- **Person 3**(Bhakti Gupta)[@bhaktigupta51-ai] — Frontend/UI, candidate data integration
