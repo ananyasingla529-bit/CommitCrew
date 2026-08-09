@@ -1865,4 +1865,64 @@ Persona B baseline test: **PASS**
 
 No prompt changes made yet.
 
+## Phase 3 — Test 1 (Live UI)
+
+**Environment:** Local UI (`localhost:3000/interview`), backend running
+post-fix `route.ts` (PERSONA_A/B text synced to `prompts/phase1-personas.md`,
+`generateFeedback` now receives the real transcript).
+
+**Persona:** C — routed automatically via job-role keyword match
+("IT Support Specialist" hits the junior/support keyword list).
+
+**Candidate:** Gerald Combs (CAND-010) — thin profile.
+- 5 real eligible (passed, non-skipped) days
+- 3 failed days (8, 10, 22)
+- 2 skipped days (27, 28)
+
+**Expected behavior:**
+- Never reference the failed or skipped days
+- Reach the 8-question minimum despite only 5 real eligible days, via
+  genuine revisits rather than stopping early
+- Final feedback grounded in what the candidate actually said, not
+  generic or invented content
+
+### Interview observations
+- Completed at exactly 8 primary questions
+- Zero references to Day 8, 10, 22 (failed) or Day 27, 28 (skipped)
+- Revisited days were reported as genuinely different from the first
+  pass, not repetitive
+- Feedback strengths cited specific real content from the conversation
+  (PCA, dimensionality/clustering, conversation memory vs. retrieval
+  separation) — independently confirmed by the candidate-player as
+  things they actually typed, not invented by the model
+
+### Problems found
+- None in this run.
+
+### Root cause
+- N/A
+
+### Change required
+- None. This run supports keeping the current fix as-is.
+
+### After-change result
+- N/A — no change made from this test.
+
+### Open item (coverage gap, not a defect)
+This run validates Persona C's thin-profile revisit handling and the
+transcript-grounded feedback fix. It does **not** validate Persona A's
+thin-profile fallback specifically — the original bug we found and fixed
+was in Persona A's path, and Gerald's real `jobRole` routes to Persona C,
+not A. No candidate in `candidates.json` is both thin-profile and
+A-routed. Follow-up needed: either temporarily override `jobRole` for one
+test call (as done in the earlier curl tests) to force Persona A, or
+explicitly accept this as an untested path.
+
+### Verdict
+**PASS** — for Persona C thin-profile handling and feedback grounding.
+Persona A thin-profile path and Persona B live-UI behavior remain
+untested as of this entry.
+
+---
+
 
