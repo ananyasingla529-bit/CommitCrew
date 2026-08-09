@@ -186,12 +186,66 @@ function getPersonaPrompt(persona: "A" | "B" | "C"): string {
 // MAIN API HANDLER
 // ═══════════════════════════════════════════════════════════════════
 
+/**
+ * Checks the candidate object has the minimum real shape our code depends
+ * on, before we ever touch it. Without this, a missing/malformed
+ * `candidate.member` or `candidate.missions` would crash with a raw
+ * unhandled error (500) instead of a clear, actionable message.
+ */
+function validateCandidate(candidate: any): string | null {
+  if (typeof candidate !== "object" || candidate === null) {
+    return "candidate must be an object";
+  }
+  if (!candidate.member || typeof candidate.member !== "object") {
+    return "candidate.member is required and must be an object";
+  }
+  if (!candidate.member.id || typeof candidate.member.id !== "string") {
+    return "candidate.member.id is required and must be a string";
+  }
+  if (!candidate.member.name || typeof candidate.member.name !== "string") {
+    return "candidate.member.name is required and must be a string";
+  }
+  if (!Array.isArray(candidate.missions)) {
+    return "candidate.missions is required and must be an array";
+  }
+  return null; // valid
+}
+
 export async function POST(request: Request) {
-  const body = await request.json();
+  // Top-level safety net: any unexpected error anywhere in the handler
+  // (a KV hiccup, an edge case we haven't thought of, etc.) should return
+  // a clean JSON error response, not an unhandled crash.
+  try {
+    return await handleInterviewRequest(request);
+  } catch (error) {
+    console.error("Unhandled error in /api/interview:", error);
+    return NextResponse.json(
+      { error: "Something went wrong processing the interview request." },
+      { status: 500 }
+    );
+  }
+}
+
+async function handleInterviewRequest(request: Request) {
+  // Layer 1: malformed JSON body (e.g. empty body, broken JSON) shouldn't
+  // crash — it should return a clear 400 instead of an unhandled 500.
+  let body: any;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      { error: "Request body must be valid JSON" },
+      { status: 400 }
+    );
+  }
+
   const { sessionId, candidate, message } = body;
 
-  if (!sessionId) {
-    return NextResponse.json({ error: "sessionId is required" }, { status: 400 });
+  if (!sessionId || typeof sessionId !== "string") {
+    return NextResponse.json(
+      { error: "sessionId is required and must be a string" },
+      { status: 400 }
+    );
   }
 
   const existingSession = await kv.get<Session>(sessionKey(sessionId));
@@ -203,6 +257,14 @@ export async function POST(request: Request) {
         { error: "candidate is required for new interview" },
         { status: 400 }
       );
+    }
+
+    // Layer 2: candidate is present but might be shaped wrong (missing
+    // member/missions, wrong types, etc.) — catch that here with a clear
+    // message instead of letting buildStructure1 throw an unhandled error.
+    const validationError = validateCandidate(candidate);
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
     const structure1 = buildStructure1(candidate);
