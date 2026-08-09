@@ -20,7 +20,6 @@ type Structure1 = {
       type: string;
       tools: string[];
       objectives: string[];
-      attempts: number;
     };
   };
 };
@@ -307,21 +306,15 @@ function buildStructure1(candidate: any): Structure1 {
 
   const dayDetails: Structure1["dayDetails"] = {};
 
-  // Index missions by day so we can pull `attempts` for each eligible day —
-  // curriculum.json has no `attempts` field, only the raw mission entry does.
-  const missionByDay = new Map(candidate.missions.map((m: any) => [m.day, m]));
-
   for (const day of eligibleDays) {
     const curriculumDay = (curriculum as any).days.find((d: any) => d.day === day);
     if (curriculumDay) {
-      const mission = missionByDay.get(day) as any;
       dayDetails[day] = {
         day: curriculumDay.day,
         title: curriculumDay.title,
         type: curriculumDay.type,
         tools: curriculumDay.tools || [],
         objectives: curriculumDay.objectives || [],
-        attempts: mission?.attempts ?? 1,
       };
     }
   }
@@ -354,19 +347,13 @@ function convertStructure2ToGroqFormat(
   const focusDetails = structure1.dayDetails[focusDay];
   const objectives = focusDetails?.objectives?.join("; ") || "";
   const tools = focusDetails?.tools?.join(", ") || "";
-  const focusAttempts = focusDetails?.attempts ?? 1;
 
   // Give the AI the FULL real list of this candidate's eligible days and
   // titles — without this, any persona that asks "what earlier day did
   // this depend on?" has no real data to draw from and will invent a
-  // plausible-sounding but fake day number/title instead. Attempts are
-  // included per day so personas can calibrate across the whole profile,
-  // not just the day being asked about right now.
+  // plausible-sounding but fake day number/title instead.
   const allEligibleDaysList = structure1.eligibleDays
-    .map((day) => {
-      const d = structure1.dayDetails[day];
-      return `Day ${day}: "${d?.title || "Unknown"}" (attempts: ${d?.attempts ?? 1})`;
-    })
+    .map((day) => `Day ${day}: "${structure1.dayDetails[day]?.title || "Unknown"}"`)
     .join("\n");
 
   const systemPrompt = `${getPersonaPrompt(persona)}
@@ -385,9 +372,7 @@ ${allEligibleDaysList}
 
 FOR THIS TURN ONLY: Ask your next primary question about Day ${focusDay} —
 "${focusTopic}". Objectives for this day: ${objectives}. Tools involved:
-${tools}. The candidate passed this day in ${focusAttempts} attempt(s) —
-use this to calibrate difficulty per your persona's strategy. Ground the
-question in this specific day's content, following
+${tools}. Ground the question in this specific day's content, following
 your persona's style and strategy above. If your strategy calls for tracing
 a dependency to an earlier day, you MUST pick that earlier day only from
 the list above — never invent a day number, title, or topic that isn't
