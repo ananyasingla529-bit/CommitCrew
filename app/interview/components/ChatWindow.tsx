@@ -19,6 +19,7 @@ interface ChatWindowProps {
   onDraftChange: (value: string) => void;
   onSend: () => void;
   loading: boolean;
+  finishing: boolean;
   error: string | null;
   onRetry: () => void;
 }
@@ -33,6 +34,7 @@ export default function ChatWindow({
   onDraftChange,
   onSend,
   loading,
+  finishing,
   error,
   onRetry,
 }: ChatWindowProps) {
@@ -40,7 +42,7 @@ export default function ChatWindow({
 
   useEffect(() => {
     historyEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [history, currentQuestion]);
+  }, [history, currentQuestion, loading]);
 
   const canSend = draftAnswer.trim().length > 0 && !loading;
 
@@ -76,9 +78,23 @@ export default function ChatWindow({
           ))}
 
           {/* Current, not-yet-answered question */}
-          {currentQuestion && (
+          {currentQuestion && !loading && (
             <div className="self-start max-w-[85%] rounded-2xl rounded-tl-sm border border-[#E8A33D]/30 bg-[#E8A33D]/10 px-4 py-2.5 text-sm leading-relaxed text-[#F2F1ED]">
               {currentQuestion}
+            </div>
+          )}
+
+          {/* Evaluating the answer / wrapping up the interview — keeps the
+              wait visible instead of jumping straight to the next question
+              or ending with no warning */}
+          {loading && (
+            <div className="self-start flex max-w-[85%] items-center gap-2 rounded-2xl rounded-tl-sm bg-white/[0.06] px-4 py-2.5 text-sm leading-relaxed text-[#9B9CA6]">
+              {finishing && <span>Preparing your report…</span>}
+              <span className="flex items-center gap-1">
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current" />
+              </span>
             </div>
           )}
 

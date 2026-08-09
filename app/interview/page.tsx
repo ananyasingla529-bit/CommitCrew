@@ -28,6 +28,7 @@ export default function InterviewPage() {
   const [draftAnswer, setDraftAnswer] = useState("");
   const [feedback, setFeedback] = useState<InterviewFeedback | null>(null);
   const [loading, setLoading] = useState(false);
+  const [finishing, setFinishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const screen: "welcome" | "chat" | "feedback" = feedback ? "feedback" : sessionId ? "chat" : "welcome";
@@ -52,31 +53,50 @@ export default function InterviewPage() {
 
   async function handleSend() {
     if (!sessionId || draftAnswer.trim().length === 0 || loading) return;
+
+    const answeredQuestion = currentQuestion;
+    const answerText = draftAnswer;
+
+    // Show the exchange immediately (like a normal chat) instead of waiting
+    // for the evaluation to finish before it appears.
+    setHistory((prev) => [
+      ...prev,
+      { role: "ai", text: answeredQuestion },
+      { role: "user", text: answerText },
+    ]);
+    setCurrentQuestion("");
+    setDraftAnswer("");
     setLoading(true);
     setError(null);
+
     try {
-      const response = await sendMessage(sessionId, draftAnswer);
+      const response = await sendMessage(sessionId, answerText);
+      setProgress(response.progress ?? null);
 
       if (response.done) {
-        if (response.feedback) setFeedback(response.feedback);
-        setCurrentQuestion("");
-        setDraftAnswer("");
+        // Show the interviewer's closing message as a real chat bubble first
+        // — the candidate should see the interview actually wrap up in
+        // conversation before the report appears, not jump straight to it.
+        if (response.reply) {
+          setHistory((prev) => [...prev, { role: "ai", text: response.reply }]);
+        }
+        setFinishing(true);
+        setTimeout(() => {
+          if (response.feedback) setFeedback(response.feedback);
+          setFinishing(false);
+          setLoading(false);
+        }, 1800);
       } else {
-        setHistory((prev) => [
-          ...prev,
-          { role: "ai", text: currentQuestion },
-          { role: "user", text: draftAnswer },
-        ]);
         setCurrentQuestion(response.reply);
-        setDraftAnswer("");
+        setLoading(false);
       }
-      setProgress(response.progress ?? null);
     } catch (err) {
-      // Conversation, session, and the unsent draft are all left untouched
-      // so the user can hit Retry (or Send again) without losing anything
-      // or thinking the interview ended.
+      // Roll back the optimistic update and restore the question + draft
+      // so Retry (or Send again) picks up exactly where it left off.
+      setHistory((prev) => prev.slice(0, -2));
+      setCurrentQuestion(answeredQuestion);
+      setDraftAnswer(answerText);
       setError(err instanceof InterviewApiError ? err.message : "Something went wrong. Please try again.");
-    } finally {
       setLoading(false);
     }
   }
@@ -89,6 +109,7 @@ export default function InterviewPage() {
     setProgress(null);
     setDraftAnswer("");
     setFeedback(null);
+    setFinishing(false);
     setError(null);
   }
 
@@ -109,6 +130,7 @@ export default function InterviewPage() {
           onDraftChange={setDraftAnswer}
           onSend={handleSend}
           loading={loading}
+          finishing={finishing}
           error={error}
           onRetry={handleSend}
         />
