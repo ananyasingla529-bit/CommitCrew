@@ -147,7 +147,7 @@ into the live route in this session, since it would have reintroduced the
 same two production bugs (in-memory session storage, non-static file
 reads inside serverless functions) that were just fixed and verified live.
 
-## Phase 2/3 — Final Summary (Submission-Ready)
+## Phase 3 — Final Summary (Submission-Ready)
 
 ### Status: READY FOR SUBMISSION
 
