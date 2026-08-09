@@ -6,7 +6,7 @@ An AI-powered technical interview agent that conducts realistic, adaptive
 mock interviews for graduates of a 31-day AI engineering cohort — based on
 what each candidate actually completed, not a generic quiz.
 
-🔗 **Live:** https://commit-crew-phi.vercel.app
+🔗 **Live:** https://commit-crew-phi.vercel.app/interview
 
 ---
 
