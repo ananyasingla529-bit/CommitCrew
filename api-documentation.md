@@ -150,6 +150,7 @@ truly unexpected failures — see below).
 |---|---|---|
 | `sessionId` missing or not a string | 400 | `{"error":"sessionId is required and must be a string"}` |
 | Starting a session with no `candidate` | 400 | `{"error":"candidate is required for new interview"}` |
+| `candidate` present but not an object | 400 | `{"error":"candidate must be an object"}` |
 | `candidate.member` missing/malformed | 400 | `{"error":"candidate.member is required and must be an object"}` |
 | `candidate.missions` missing/not an array | 400 | `{"error":"candidate.missions is required and must be an array"}` |
 | Candidate has zero eligible (passed) days | 400 | `{"error":"candidate has no eligible passed curriculum days to interview on"}` |
@@ -207,10 +208,15 @@ and don't advance the conversation UI when an error is returned.
   and receiving the next question.
 - **Rate limits:** Groq's free tier enforces a tokens-per-minute limit.
   Heavy, rapid-fire testing (many full interviews back-to-back) can
-  trigger it. When it happens, the endpoint does NOT crash — it returns
-  a normal `done: false` response with a graceful fallback reply
-  ("Sorry, I had trouble generating a question...") instead of the real
-  next question. The UI doesn't need special handling for this; it's
-  just a slightly awkward reply, not an error. Avoid demo-day rehearsals
-  running many full interviews in quick succession right before
-  presenting.
+  trigger it. When it happens during question generation, the endpoint
+  does NOT crash — it returns a normal `done: false` response with a
+  graceful fallback reply ("Sorry, I had trouble generating a
+  question...") instead of the real next question. The UI doesn't need
+  special handling for this; it's just a slightly awkward reply, not an
+  error. If the same rate limit is hit during **final feedback
+  generation** instead, the response still comes back as a normal
+  `done: true` with a `feedback` object — it just falls back to a
+  generic, non-specific summary/strengths/gaps instead of one grounded
+  in the actual transcript. Again, not an error the UI needs to handle,
+  just lower-quality output. Avoid demo-day rehearsals running many full
+  interviews in quick succession right before presenting.
