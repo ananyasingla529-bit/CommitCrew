@@ -96,6 +96,33 @@ but-missing behaviors directly into the persona prompt text:
   angle, be grounded in something the candidate actually said, and
   transition naturally rather than announcing the revisit.
 
+### Attempts-based difficulty calibration (Person 3)
+All three personas' written strategies describe calibrating question
+difficulty using the candidate's per-day `attempts` count, but the initial
+integration never actually passed that data to the AI — only day title,
+objectives, and tools. Person 3 extended `Structure1.dayDetails` to carry
+`attempts` per day (sourced from each mission entry, since curriculum.json
+itself has no attempts field) and updated the per-turn prompt to state the
+attempt count explicitly. Verified live with Gerald Combs (CAND-010,
+Persona C): low-attempt days (Day 1, 2 attempts) got straightforward
+questions; high-attempt days (Day 7/12, 5 attempts) were framed more
+casually around what caused difficulty, matching the persona's calibration
+rule. Also re-verified Persona A's dependency-tracing and day-grounding
+fixes hold on a second, independent candidate (Alex Turner, CAND-002,
+Backend Software Engineer) — 10 questions, all referencing real days with
+correct titles, zero hallucinated content.
+
+### Hardening against malformed input
+The endpoint had no defense against malformed requests — a missing
+`candidate.member`, a non-array `candidate.missions`, or invalid JSON in
+the request body would all crash with an unhandled 500 error rather than
+a clear message. Added three layers: JSON parse errors return a clean 400,
+a `validateCandidate()` check catches shape/type problems before they
+reach any downstream logic, and a top-level try/catch around the whole
+handler catches anything unexpected and returns a clean 500 instead of
+crashing raw. Verified with deliberately broken input (missing candidate
+fields, invalid JSON) — both return clear, specific error messages.
+
 ### Known, accepted limitation
 Groq's free tier enforces a tokens-per-minute rate limit. Heavy back-to-
 back test-interview sessions can trigger it (confirmed via Groq's own
